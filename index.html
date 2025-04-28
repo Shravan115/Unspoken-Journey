@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Unspoken Journeys</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script defer src="scripts.js"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            font-size: 18px;
+            margin: 0;
+            padding: 0;
+            background: url('https://img.freepik.com/premium-photo/what-is-your-story-text-notebook-with-green-leaf-dark-background_585380-199.jpg') no-repeat center center/cover;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            text-align: center;
+            background-size: cover;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .content {
+            flex-grow: 1;
+            padding: 100px 20px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .custom-playlists {
+            max-width: 800px;
+            margin: auto;
+            padding-top: 50px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 1.5s ease-in-out forwards;
+        }
+
+        /* Position login/signup in the top right and dark mode button in the top left inside small cubes */
+        .top-controls {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .auth-button, .theme-toggle {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 8px 12px;
+            border-radius: 5px;
+            transition: background 0.3s, transform 0.2s;
+            background: #333;
+            border: none;
+            cursor: pointer;
+            display: block;
+            text-align: center;
+            font-size: 14px;
+            width: 80px;
+        }
+
+        .auth-button:hover, .theme-toggle:hover {
+            background: #ffcc00;
+            color: #141e30;
+            transform: scale(1.05);
+        }
+
+        .dark-mode-container {
+            position: absolute;
+            top: 15px;
+            left: 20px;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            padding: 15px 0;
+            box-shadow: 0px -4px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        .bottom-nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 10px 15px;
+            transition: background 0.3s, transform 0.2s;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .bottom-nav a:hover {
+            background: #ffcc00;
+            color: #141e30;
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+
+<div class="dark-mode-container">
+    <button class="theme-toggle">🌙</button>
+</div>
+
+<div class="top-controls">
+    <a href="login.html" class="auth-button">Login</a>
+    <a href="signup.html" class="auth-button">Sign Up</a>
+</div>
+
+<div class="content">
+    <header class="parallax fade-in">
+        <h1>Welcome to Unspoken Journeys</h1>
+    </header>
+
+    <section class="custom-playlists fade-in" style="animation-delay: 0.5s;">
+        <h2>Unleash the Power of Storytelling</h2>
+        <p>Step into a world where every journey has a voice, waiting to be heard. Explore, share, and connect with a community that thrives on authenticity and inspiration.</p>
+        <p>Dive deep into emotions, discover new perspectives, and be part of a platform that celebrates every unspoken story. Your voice matters, your story is unique, and this is the place to let it shine.</p>
+    </section>
+</div>
+
+<div class="bottom-nav">
+    <a href="index.html">Home</a>
+    <a href="stories.html">Stories</a>
+    <a href="share-story.html">Share Your Story</a>
+    <a href="my-work.html">My Work</a>
+    <a href="contact.html">Contact</a>
+    <a href="about-us.html">About Us</a>
+</div>
+
+<script>
+    document.querySelector('.theme-toggle').addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+    });
+
+    window.onload = () => {
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark-mode');
+        }
+    };
+</script>
+
+</body>
+</html>

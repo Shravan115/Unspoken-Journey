@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Unspoken Journeys</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-bg: #fafafa;
+            --secondary-bg: #ffffff;
+            --text-primary: #262626;
+            --text-secondary: #8e8e8e;
+            --border-color: #dbdbdb;
+            --accent-color: #0095f6;
+            --hover-color: #f0f0f0;
+        }
+
+        [data-theme="dark"] {
+            --primary-bg: #121212;
+            --secondary-bg: #1e1e1e;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --border-color: #2d2d2d;
+            --accent-color: #0095f6;
+            --hover-color: #2d2d2d;
+        }
+
+        /* Theme Toggle Button Styles */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 10px;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Update existing styles to use CSS variables */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .about-section {
+            background: var(--secondary-bg);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 1px solid var(--border-color);
+        }
+
+        .section-title {
+            color: var(--text-primary);
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .section-content {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            font-size: 1.1rem;
+            text-align: justify;
+        }
+
+        .team-section {
+            background: var(--secondary-bg);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 1px solid var(--border-color);
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .team-member {
+            text-align: center;
+            padding: 20px;
+            background: var(--primary-bg);
+            border-radius: 12px;
+            transition: transform 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        .team-member:hover {
+            transform: translateY(-5px);
+        }
+
+        .member-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin-bottom: 15px;
+            object-fit: cover;
+            border: 3px solid var(--accent-color);
+        }
+
+        .member-name {
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            margin: 10px 0;
+        }
+
+        .member-role {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .social-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .social-link:hover {
+            color: var(--accent-color);
+        }
+
+        .mission-section {
+            background: var(--secondary-bg);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 1px solid var(--border-color);
+        }
+
+        .mission-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .mission-card {
+            padding: 25px;
+            background: var(--primary-bg);
+            border-radius: 12px;
+            text-align: center;
+            transition: transform 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        .mission-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .mission-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: var(--accent-color);
+        }
+
+        .mission-title {
+            color: var(--text-primary);
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+        }
+
+        .mission-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .contact-section {
+            background: var(--secondary-bg);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 1px solid var(--border-color);
+        }
+
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 20px;
+            background: var(--primary-bg);
+            border-radius: 12px;
+            transition: transform 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        .contact-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .contact-icon {
+            font-size: 1.5rem;
+            color: var(--accent-color);
+        }
+
+        .contact-text {
+            color: var(--text-primary);
+        }
+
+        .contact-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            width: 100%;
+            background: var(--secondary-bg);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            padding: 15px 0;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .bottom-nav a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        .bottom-nav a:hover {
+            background: var(--hover-color);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            .team-grid, .mission-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255,255,255,0.9); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999;">
+        <div style="text-align: center;">
+            <div style="width: 50px; height: 50px; border: 5px solid #f3f3f3; border-top: 5px solid var(--accent-color); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto;"></div>
+            <p style="margin-top: 20px; font-weight: 500;">Loading page...</p>
+            <div id="init-status" style="margin-top: 10px; font-size: 0.9rem; color: #666;">
+                <p>Page Load: ⏳</p>
+                <p>Theme: ⏳</p>
+                <p>Content: ⏳</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Theme Toggle Button -->
+    <button class="theme-toggle" id="theme-toggle" title="Toggle dark/light mode">🌞</button>
+
+    <div class="container" id="main-content" style="display: none;">
+        <header class="parallax fade-in">
+            <h1>About Unspoken Journeys</h1>
+        </header>
+
+        <section class="custom-playlists fade-in" style="animation-delay: 0.5s;">
+            <h2>Our Mission</h2>
+            <p>At Unspoken Journeys, we believe that every story matters. Our platform was created to provide a safe and inspiring space for people to share their unique experiences, connect with others, and find strength in storytelling.</p>
+            <p>We're dedicated to fostering a community where authenticity thrives and where every voice can be heard, no matter how quiet it may seem.</p>
+        </section>
+
+        <section class="team-grid fade-in" style="animation-delay: 1s;">
+            <h2>Our Team</h2>
+            <div class="team-member">
+                <img src="https://ui-avatars.com/api/?name=Shravan+Gupta&background=ffcc00&color=141e30" alt="Shravan Gupta">
+                <h3>Shravan Gupta</h3>
+                <p>Founder & CEO</p>
+            </div>
+            <div class="team-member">
+                <img src="https://ui-avatars.com/api/?name=Harshdeep+Singh&background=ffcc00&color=141e30" alt="Harshdeep Singh">
+                <h3>Harshdeep Singh</h3>
+                <p>Creative Director</p>
+            </div>
+            
+        </section>
+
+        <section class="custom-playlists fade-in" style="animation-delay: 1.5s;">
+            <h2>Our Values</h2>
+            <div class="values-list">
+                <div class="value-item">
+                    <h3>Authenticity</h3>
+                    <p>We encourage genuine storytelling and honest expression.</p>
+                </div>
+                <div class="value-item">
+                    <h3>Community</h3>
+                    <p>We believe in the power of connection and shared experiences.</p>
+                </div>
+                <div class="value-item">
+                    <h3>Growth</h3>
+                    <p>We support personal development through storytelling.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="bottom-nav">
+        <a href="index.html">Home</a>
+        <a href="stories.html">Stories</a>
+        <a href="share-story.html">Share Your Story</a>
+        <a href="contact.html">Contact</a>
+        <a href="about-us.html">About Us</a>
+    </div>
+
+    <script>
+        let initializationSteps = {
+            pageLoad: false,
+            theme: false,
+            content: false
+        };
+
+        function updateLoadingStatus(message) {
+            const loadingScreen = document.getElementById('loading-screen');
+            if (loadingScreen) {
+                const statusDiv = document.getElementById('init-status');
+                if (statusDiv) {
+                    statusDiv.innerHTML = `
+                        <p>Page Load: ${initializationSteps.pageLoad ? '✅' : '⏳'}</p>
+                        <p>Theme: ${initializationSteps.theme ? '✅' : '⏳'}</p>
+                        <p>Content: ${initializationSteps.content ? '✅' : '⏳'}</p>
+                    `;
+                }
+                const messageP = loadingScreen.querySelector('p');
+                if (messageP) {
+                    messageP.textContent = message;
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                console.log('DOM Content Loaded');
+                const loadingScreen = document.getElementById('loading-screen');
+                const mainContent = document.getElementById('main-content');
+                
+                if (!loadingScreen || !mainContent) {
+                    throw new Error('Required elements not found');
+                }
+
+                // Set timeout for initialization
+                const initTimeout = setTimeout(() => {
+                    console.error('Initialization timeout');
+                    loadingScreen.innerHTML = `
+                        <div style="text-align: center; color: #ff4757;">
+                            <h3>Loading Timeout</h3>
+                            <p>The page is taking too long to load. Please check your internet connection.</p>
+                            <div id="init-status" style="margin: 20px 0; text-align: left; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+                                <p>Page Load: ${initializationSteps.pageLoad ? '✅' : '❌'}</p>
+                                <p>Theme: ${initializationSteps.theme ? '✅' : '❌'}</p>
+                                <p>Content: ${initializationSteps.content ? '✅' : '❌'}</p>
+                            </div>
+                            <button onclick="window.location.reload()" style="
+                                padding: 10px 20px;
+                                background: #ff4757;
+                                color: white;
+                                border: none;
+                                border-radius: 5px;
+                                cursor: pointer;
+                            ">
+                                Retry
+                            </button>
+                        </div>
+                    `;
+                }, 15000);
+
+                // Initialize theme
+                const themeToggle = document.getElementById('theme-toggle');
+                const html = document.documentElement;
+                
+                if (!themeToggle || !html) {
+                    throw new Error('Theme elements not found');
+                }
+
+                initializationSteps.pageLoad = true;
+                updateLoadingStatus('Initializing theme...');
+
+                // Theme initialization
+                const savedTheme = localStorage.getItem('theme') || 'light';
+                html.setAttribute('data-theme', savedTheme);
+                updateThemeIcon(savedTheme);
+
+                themeToggle.addEventListener('click', () => {
+                    const currentTheme = html.getAttribute('data-theme');
+                    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                    html.setAttribute('data-theme', newTheme);
+                    localStorage.setItem('theme', newTheme);
+                    updateThemeIcon(newTheme);
+                });
+
+                initializationSteps.theme = true;
+                updateLoadingStatus('Loading content...');
+
+                // Show main content
+                setTimeout(() => {
+                    initializationSteps.content = true;
+                    updateLoadingStatus('Complete!');
+                    loadingScreen.style.display = 'none';
+                    mainContent.style.display = 'block';
+                    clearTimeout(initTimeout);
+                }, 1000);
+
+            } catch (error) {
+                console.error('Error during initialization:', error);
+                const loadingScreen = document.getElementById('loading-screen');
+                if (loadingScreen) {
+                    loadingScreen.innerHTML = `
+                        <div style="text-align: center; color: #ff4757;">
+                            <h3>Error Loading Page</h3>
+                            <p>${error.message}</p>
+                            <button onclick="window.location.reload()" style="
+                                padding: 10px 20px;
+                                background: #ff4757;
+                                color: white;
+                                border: none;
+                                border-radius: 5px;
+                                cursor: pointer;
+                                margin-top: 10px;
+                            ">
+                                Try Again
+                            </button>
+                        </div>
+                    `;
+                }
+            }
+        });
+
+        function updateThemeIcon(theme) {
+            const themeToggle = document.getElementById('theme-toggle');
+            if (themeToggle) {
+                themeToggle.innerHTML = theme === 'light' ? '🌞' : '🌙';
+            }
+        }
+    </script>
+</body>
+</html> 

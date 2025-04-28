@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Unspoken Journey's</title>
+    <link rel="stylesheet" href="./style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: url('https://www.coreknowledge.org/wp-content/uploads/2023/03/shutterstock_1963788328-scaled-1-1920x1003.jpg') no-repeat center center fixed;
+            background-size: cover;
+            text-align: center;
+            padding: 50px;
+            color: white;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            max-width: 450px;
+            padding: 40px;
+            background: rgba(0, 0, 0, 0.7);
+            box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            margin-left: 80px;
+            animation: fadeIn 1s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.9);
+            color: black;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background 0.3s ease;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            text-align: center;
+            color: black;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .popup button {
+            margin-top: 10px;
+            background: #28a745;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+          width: 100%;
+          background: rgba(0, 0, 0, 0.8);
+          display: flex;
+          justify-content: space-around;
+          align-items: center;
+          position: fixed;
+          bottom: 0;
+          left: 0;
+          padding: 15px 0;
+          box-shadow: 0px -4px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        .bottom-nav a {
+          color: white;
+          text-decoration: none;
+          font-weight: bold;
+          padding: 10px 15px;
+          transition: background 0.3s, transform 0.2s;
+          border-radius: 5px;
+          font-size: 14px;
+        }
+
+        .bottom-nav a:hover {
+          background: #ffcc00;
+          color: #141e30;
+          transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Contact Us</h2>
+        <p>Have questions or feedback? Fill out the form below:</p>
+        
+        <form id="contact-form">
+            <input type="text" id="name" placeholder="Your Name" required>
+            <input type="email" id="email" placeholder="Your Email" required>
+            <textarea id="message" placeholder="Your Message" rows="4" required></textarea>
+            <button type="submit">Send Message</button>
+        </form>
+
+        <p><strong>Email:</strong> unspokenjourneys@gmail.com</p>
+        <p><strong>Phone:</strong> +91 8454866231</p>
+    </div>
+
+    <div class="popup" id="popup">
+        <p>Thank you! Your message has been sent.</p>
+        <button onclick="closePopup()">OK</button>
+    </div>
+
+    <div class="bottom-nav">
+      <a href="index.html">Home</a>
+      <a href="stories.html">Stories</a>
+      <a href="share-story.html">Share Your Story</a>
+      <a href="contact.html">Contact</a>
+      <a href="about-us.html">About Us</a>
+    </div>
+
+    <!-- Firebase Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+    <script src="database.js"></script>
+    <script>
+        document.getElementById("contact-form").addEventListener("submit", async function(event) {
+            event.preventDefault();
+            const name = document.getElementById("name").value;
+            const email = document.getElementById("email").value;
+            const message = document.getElementById("message").value;
+
+            try {
+                await window.dbFunctions.submitContactForm(name, email, message);
+                alert('Message sent successfully! We will get back to you soon.');
+                document.getElementById("contact-form").reset();
+            } catch (error) {
+                alert('Error sending message: ' + error.message);
+            }
+        });
+        function closePopup() {
+            document.getElementById("popup").style.display = "none";
+        }
+
+        // Page Load Popup Effect
+        window.onload = function() {
+            document.querySelector(".container").style.opacity = "0";
+            setTimeout(function() {
+                document.querySelector(".container").style.opacity = "1";
+            }, 300);
+        };
+    </script>
+
+</body>
+</html>

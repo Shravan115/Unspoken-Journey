@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Share Your Story - Unspoken Journeys</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: url('https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8c3RvcnklMjBiYWNrZ3JvdW5kfGVufDB8fDB8fHww') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            color: #333;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .story-form {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #2d3436;
+        }
+
+        .form-group input {
+            width: 30%;
+            padding: 12px 15px;
+            border: 2px solid #f1f2f6;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #ff4757;
+            box-shadow: 0 0 0 3px rgba(255, 71, 87, 0.1);
+        }
+
+        .form-group textarea {
+            width: 100%;
+            min-height: 500px;
+            resize: vertical;
+            padding: 12px 15px;
+            border: 2px solid #f1f2f6;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .hashtags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .hashtag-input {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .hashtag-input input {
+            flex: 1;
+        }
+
+        .hashtag-input button {
+            padding: 12px 20px;
+            background: #ff4757;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .hashtag-input button:hover {
+            background: #ff6b81;
+            transform: translateY(-2px);
+        }
+
+        .hashtags-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .hashtag-item {
+            background: #f1f2f6;
+            color: #2d3436;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .hashtag-item button {
+            background: none;
+            border: none;
+            color: #ff4757;
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 0 4px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px 25px;
+            background: linear-gradient(45deg, #ff4757, #ff6b81);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 71, 87, 0.3);
+        }
+
+        .submit-btn:disabled {
+            background: #b2bec3;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .character-count {
+            text-align: right;
+            font-size: 0.9rem;
+            color: #636e72;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 20px auto;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .story-form {
+                padding: 20px;
+            }
+
+            .form-group input,
+            .form-group textarea {
+                padding: 10px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Share Your Story</h1>
+            <p>Your voice matters. Share your journey with the world.</p>
+        </div>
+
+        <form class="story-form" id="storyForm">
+            <div class="form-group">
+                <label for="title">Story Title</label>
+                <input type="text" id="title" placeholder="Give your story a captivating title" required>
+            </div>
+
+            <div class="form-group">
+                <label for="story">Your Story</label>
+                <textarea id="story" placeholder="Write your story here..." required></textarea>
+                <div class="character-count" id="characterCount">0/5000 characters</div>
+            </div>
+
+            <div class="form-group">
+                <label>Hashtags</label>
+                <div class="hashtag-input">
+                    <input type="text" id="hashtagInput" placeholder="Add relevant hashtags (e.g., #inspiration)">
+                    <button type="button" id="addHashtag">Add</button>
+                </div>
+                <div class="hashtags-list" id="hashtagsList"></div>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">Publish Story</button>
+        </form>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+    <script>
+        // Initialize Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyC-LxHJkDXHiZyWJ-A-6FrHuJQNuTVL-pE",
+            authDomain: "unspoken-journeys.firebaseapp.com",
+            projectId: "unspoken-journeys",
+            storageBucket: "unspoken-journeys.appspot.com",
+            messagingSenderId: "337142209484",
+            appId: "1:337142209484:web:5d76cf1cc8c2a1b1c6c862",
+            measurementId: "G-5HRG5K1GGD"
+        };
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+
+        // Check authentication state
+        auth.onAuthStateChanged(user => {
+            if (!user) {
+                // Store the current page URL in sessionStorage
+                sessionStorage.setItem('redirectAfterLogin', 'write-story.html');
+                window.location.href = 'login.html';
+            }
+        });
+
+        // Character count
+        const storyTextarea = document.getElementById('story');
+        const characterCount = document.getElementById('characterCount');
+        const maxCharacters = 5000;
+
+        storyTextarea.addEventListener('input', () => {
+            const count = storyTextarea.value.length;
+            characterCount.textContent = `${count}/${maxCharacters} characters`;
+            if (count > maxCharacters) {
+                characterCount.style.color = '#ff4757';
+            } else {
+                characterCount.style.color = '#636e72';
+            }
+        });
+
+        // Hashtag functionality
+        const hashtagInput = document.getElementById('hashtagInput');
+        const addHashtagBtn = document.getElementById('addHashtag');
+        const hashtagsList = document.getElementById('hashtagsList');
+        const hashtags = new Set();
+
+        addHashtagBtn.addEventListener('click', () => {
+            const hashtag = hashtagInput.value.trim();
+            if (hashtag && !hashtags.has(hashtag)) {
+                hashtags.add(hashtag);
+                updateHashtagsList();
+                hashtagInput.value = '';
+            }
+        });
+
+        function updateHashtagsList() {
+            hashtagsList.innerHTML = '';
+            hashtags.forEach(tag => {
+                const hashtagItem = document.createElement('div');
+                hashtagItem.className = 'hashtag-item';
+                hashtagItem.innerHTML = `
+                    ${tag}
+                    <button type="button" onclick="removeHashtag('${tag}')">&times;</button>
+                `;
+                hashtagsList.appendChild(hashtagItem);
+            });
+        }
+
+        function removeHashtag(tag) {
+            hashtags.delete(tag);
+            updateHashtagsList();
+        }
+
+        // Form submission
+        const storyForm = document.getElementById('storyForm');
+        const submitBtn = document.getElementById('submitBtn');
+
+        storyForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const title = document.getElementById('title').value.trim();
+            const story = document.getElementById('story').value.trim();
+            
+            if (!title || !story) {
+                alert('Please fill in all required fields');
+                return;
+            }
+
+            if (story.length > maxCharacters) {
+                alert('Story exceeds maximum character limit');
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Publishing...';
+
+            try {
+                const user = auth.currentUser;
+                if (!user) {
+                    // Store the form data in sessionStorage
+                    sessionStorage.setItem('pendingStory', JSON.stringify({
+                        title,
+                        story,
+                        hashtags: Array.from(hashtags)
+                    }));
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                await db.collection('stories').add({
+                    title,
+                    story,
+                    hashtags: Array.from(hashtags),
+                    userId: user.uid,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    likes: 0,
+                    comments: 0
+                });
+
+                alert('Story published successfully!');
+                window.location.href = 'stories.html';
+            } catch (error) {
+                console.error('Error publishing story:', error);
+                alert('Error publishing story. Please try again.');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Publish Story';
+            }
+        });
+    </script>
+</body>
+</html> 

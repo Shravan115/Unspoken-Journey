@@ -1,0 +1,1573 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Work - Unspoken Journeys</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-storage-compat.js"></script>
+    
+    <!-- Import database.js and auth-helper.js -->
+    <script src="database.js"></script>
+    <script src="auth-helper.js"></script>
+    <style>
+        :root {
+            --primary-bg: #fafafa;
+            --secondary-bg: #ffffff;
+            --text-primary: #262626;
+            --text-secondary: #8e8e8e;
+            --border-color: #dbdbdb;
+            --accent-color: #0095f6;
+            --hover-color: #f0f0f0;
+        }
+
+        [data-theme="dark"] {
+            --primary-bg: #121212;
+            --secondary-bg: #1e1e1e;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --border-color: #2d2d2d;
+            --accent-color: #0095f6;
+            --hover-color: #2d2d2d;
+        }
+
+        /* Theme Toggle Button Styles */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 10px;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .container {
+            max-width: 935px;
+            margin: 0 auto;
+            padding: 20px;
+            padding-bottom: 80px;
+        }
+
+        .profile-section {
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .username {
+            font-size: 2rem;
+            font-weight: 600;
+            margin: 0 0 10px 0;
+            color: var(--text-primary);
+        }
+
+        .description {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            line-height: 1.6;
+            font-size: 1.1rem;
+        }
+
+        .profile-stats {
+            display: flex;
+            gap: 40px;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: rgba(0, 149, 246, 0.05);
+            border-radius: 10px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 10px;
+            border-radius: 8px;
+            transition: background 0.3s ease;
+        }
+
+        .stat-item:hover {
+            background: rgba(0, 149, 246, 0.1);
+        }
+
+        .stat-value {
+            font-weight: 600;
+            font-size: 1.5rem;
+            color: var(--accent-color);
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .edit-btn {
+            background: var(--secondary-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 7px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .edit-btn:hover {
+            background: var(--hover-color);
+        }
+
+        .stories-section {
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .stories-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 100%;
+        }
+
+        .story-card {
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .story-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .story-content {
+            color: #636e72;
+            line-height: 1.8;
+            margin: 20px 0;
+            font-size: 1.1rem;
+            white-space: pre-wrap;
+            max-height: 160px; /* This will show approximately 5-6 lines */
+            overflow: hidden;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .story-content:not(.expanded)::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background: linear-gradient(transparent, var(--secondary-bg));
+        }
+
+        .story-content.expanded {
+            max-height: none !important;
+        }
+
+        .story-content.expanded::after {
+            display: none;
+        }
+
+        .read-more {
+            color: #ff4757;
+            cursor: pointer;
+            font-weight: 500;
+            display: inline-block;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+            padding: 5px 10px;
+            border-radius: 15px;
+            background: rgba(255, 71, 87, 0.1);
+            user-select: none;
+        }
+
+        .read-more:hover {
+            background: rgba(255, 71, 87, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .story-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color);
+            margin-top: 15px;
+        }
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #636e72;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 6px 12px;
+            border-radius: 20px;
+            background: #f1f2f6;
+            border: none;
+            font-size: 0.9rem;
+        }
+
+        .action-btn.liked {
+            color: #ff4757;
+            background: rgba(255, 71, 87, 0.1);
+        }
+
+        .action-btn:hover {
+            color: #ff4757;
+            background: #dfe6e9;
+            transform: translateY(-2px);
+        }
+
+        .story-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+
+        .story-date {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .hashtags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .hashtag {
+            background: rgba(0, 149, 246, 0.1);
+            color: var(--accent-color);
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            transition: background 0.3s ease;
+        }
+
+        .hashtag:hover {
+            background: rgba(0, 149, 246, 0.2);
+        }
+
+        .edit-story {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .edit-story:hover {
+            background: #0080e6;
+            transform: translateY(-2px);
+        }
+
+        .delete-story {
+            background: #ed4956;
+            color: white;
+        }
+
+        .delete-story:hover {
+            background: #d43f4b;
+            transform: translateY(-2px);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: var(--secondary-bg);
+            padding: 20px;
+            border-radius: 4px;
+            width: 90%;
+            max-width: 400px;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 3px;
+            font-size: 0.9rem;
+        }
+
+        .save-btn {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            width: 100%;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            width: 100%;
+            background: var(--secondary-bg);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            padding: 10px 0;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .bottom-nav a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            padding: 8px 12px;
+            border-radius: 4px;
+        }
+
+        .bottom-nav a:hover {
+            background: var(--hover-color);
+        }
+
+        @media (max-width: 768px) {
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .profile-stats {
+                justify-content: center;
+            }
+
+            .profile-pic-container {
+                margin: 0 auto;
+            }
+
+            .stories-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Add search bar styles */
+        .search-container {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 5px rgba(0, 149, 246, 0.3);
+        }
+
+        .search-button {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .search-button:hover {
+            background: #0080e6;
+        }
+
+        /* Add filter styles */
+        .filter-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-tag {
+            background: rgba(0, 149, 246, 0.1);
+            color: var(--accent-color);
+            padding: 5px 15px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-tag.active {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .filter-tag:hover {
+            background: rgba(0, 149, 246, 0.2);
+        }
+
+        /* Comments section styles */
+        .comments-section {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color);
+            display: none;
+        }
+
+        .comments-section.show {
+            display: block;
+        }
+
+        .comment-input {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .comment-input input {
+            flex: 1;
+            padding: 8px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        .comment-input button {
+            padding: 8px 20px;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .comment-input button:hover {
+            background: #0080e6;
+            transform: translateY(-2px);
+        }
+
+        .comments-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .comment {
+            background: #f8f9fa;
+            padding: 10px 15px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .comment-author {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .comment-date {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+
+        .comment-text {
+            color: var(--text-primary);
+            line-height: 1.4;
+        }
+
+        .like-count, .comment-count {
+            font-weight: 500;
+            color: #636e72;
+        }
+
+        /* Add profile picture styles */
+        .profile-pic-container {
+            position: relative;
+            margin-right: 30px;
+        }
+
+        .profile-pic-container img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--accent-color);
+        }
+
+        .profile-pic-container .edit-btn {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            padding: 8px;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Theme Toggle Button -->
+    <button class="theme-toggle" id="theme-toggle" title="Toggle dark/light mode">🌞</button>
+
+    <!-- Loading Screen -->
+    <div id="loading-screen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255,255,255,0.9); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999;">
+        <div style="text-align: center;">
+            <div style="width: 50px; height: 50px; border: 5px solid #f3f3f3; border-top: 5px solid var(--accent-color); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto;"></div>
+            <p style="margin-top: 20px; font-weight: 500;">Loading your profile...</p>
+            <div id="init-status" style="margin-top: 10px; font-size: 0.9rem; color: #666;">
+                <p>Firebase: ${initializationSteps.firebase ? '✅' : '⏳'}</p>
+                <p>Auth: ${initializationSteps.auth ? '✅' : '⏳'}</p>
+                <p>Profile: ${initializationSteps.profile ? '✅' : '⏳'}</p>
+                <p>Stories: ${initializationSteps.stories ? '✅' : '⏳'}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" id="main-content" style="display: none;">
+        <div class="profile-section">
+            <div class="profile-header">
+                <div class="profile-pic-container">
+                    <img id="profile-pic" src="https://ui-avatars.com/api/?name=User" alt="Profile Picture">
+                    <button class="edit-btn" onclick="openImageUpload()">Edit</button>
+                </div>
+                <div class="profile-info">
+                    <h1 id="username" class="username">Welcome</h1>
+                    <p id="user-description" class="description">Share your story with the world</p>
+                    <button class="edit-btn" onclick="openEditProfileModal()">Edit Profile</button>
+                </div>
+            </div>
+
+            <div class="profile-stats">
+                <div class="stat-item">
+                    <span class="stat-value">0</span>
+                    <span class="stat-label">Stories</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">0</span>
+                    <span class="stat-label">Likes</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">0</span>
+                    <span class="stat-label">Comments</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="stories-section">
+            <h2 class="section-title">
+                My Stories
+            </h2>
+
+            <div id="stories-container" class="stories-grid">
+                <!-- Stories will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div id="editProfileModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeEditProfileModal()">&times;</span>
+            <h2>Edit Profile</h2>
+            <form id="editProfileForm">
+                <div class="form-group">
+                    <label for="edit-username">Username</label>
+                    <input type="text" id="edit-username" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-description">Description</label>
+                    <textarea id="edit-description" rows="4"></textarea>
+                </div>
+                <button type="submit" class="save-btn">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Image Upload Modal -->
+    <div id="imageUploadModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeImageUploadModal()">&times;</span>
+            <h2>Change Profile Picture</h2>
+            <form id="imageUploadForm">
+                <div class="form-group">
+                    <label for="profile-image">Select Image (JPG, PNG, max 5MB)</label>
+                    <input type="file" id="profile-image" accept="image/jpeg,image/png" required>
+                    <div id="image-preview" style="margin-top: 10px; text-align: center; display: none;">
+                        <img id="preview-img" style="max-width: 200px; max-height: 200px; border-radius: 50%;">
+                    </div>
+                </div>
+                <button type="submit" class="save-btn">Upload Image</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <a href="index.html">Home</a>
+        <a href="stories.html">Stories</a>
+        <a href="share-story.html">Share Your Story</a>
+        <a href="contact.html">Contact</a>
+        <a href="about-us.html">About Us</a>
+    </div>
+
+    <!-- Firebase Scripts -->
+    <script>
+        // Initialize Firebase and declare services globally
+        let db, auth, storage;
+
+        // Initialize Firebase if not already initialized
+        try {
+            console.log('Starting Firebase initialization...');
+            
+            if (!firebase.apps.length) {
+                if (typeof firebaseConfig === 'undefined') {
+                    throw new Error('Firebase configuration is missing. Check database.js file.');
+                }
+                firebase.initializeApp(firebaseConfig);
+            }
+            
+            // Initialize Firebase services
+            db = firebase.firestore();
+            auth = firebase.auth();
+            storage = firebase.storage();
+
+            let initializationSteps = {
+                firebase: false,
+                auth: false,
+                profile: false,
+                stories: false
+            };
+
+            function updateLoadingStatus(message) {
+                const loadingScreen = document.getElementById('loading-screen');
+                if (loadingScreen) {
+                    loadingScreen.innerHTML = `
+                        <div style="text-align: center;">
+                            <div style="width: 50px; height: 50px; border: 5px solid #f3f3f3; border-top: 5px solid var(--accent-color); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto;"></div>
+                            <p style="margin-top: 20px; font-weight: 500;">${message}</p>
+                            <div id="init-status" style="margin-top: 10px; font-size: 0.9rem; color: #666;">
+                                <p>Firebase: ${initializationSteps.firebase ? '✅' : '⏳'}</p>
+                                <p>Auth: ${initializationSteps.auth ? '✅' : '⏳'}</p>
+                                <p>Profile: ${initializationSteps.profile ? '✅' : '⏳'}</p>
+                                <p>Stories: ${initializationSteps.stories ? '✅' : '⏳'}</p>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+
+            async function loadUserProfile(userId) {
+                try {
+                    console.log('Starting to load profile for user:', userId);
+                    
+                    // Get current user
+                    const currentUser = auth.currentUser;
+                    if (!currentUser) {
+                        throw new Error('No authenticated user found');
+                    }
+                    console.log('Current user:', currentUser.uid);
+                    
+                    // Get user profile data directly from Firestore
+                    const userDoc = await db.collection('users').doc(userId).get();
+                    let userData;
+                    
+                    if (!userDoc.exists) {
+                        console.warn('No user data found, using default values');
+                        userData = {
+                            fullName: currentUser.displayName || 'User',
+                            description: 'No description yet',
+                            profilePic: currentUser.photoURL || 'https://ui-avatars.com/api/?name=User'
+                        };
+                        await db.collection('users').doc(userId).set({
+                            ...userData,
+                            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+                    } else {
+                        userData = userDoc.data();
+                    }
+                    
+                    console.log('User data loaded:', userData);
+                    
+                    // Update UI with user data
+                    const usernameElement = document.getElementById('username');
+                    const descriptionElement = document.getElementById('user-description');
+                    const profilePicElement = document.getElementById('profile-pic');
+                    
+                    if (usernameElement) {
+                        usernameElement.textContent = userData.fullName || 'User';
+                    }
+                    
+                    if (descriptionElement) {
+                        descriptionElement.textContent = userData.description || 'No description yet';
+                    }
+                    
+                    if (profilePicElement) {
+                        const profilePicUrl = userData.profilePic || 
+                                            currentUser.photoURL || 
+                                            'https://ui-avatars.com/api/?name=' + encodeURIComponent(userData.fullName || 'User');
+                        profilePicElement.src = profilePicUrl;
+                    }
+                    
+                    // Update stats
+                    try {
+                        console.log('Loading user stories for stats');
+                        const storiesSnapshot = await db.collection('stories')
+                            .where('userId', '==', userId)
+                            .get();
+                        
+                        const postsCount = storiesSnapshot.size;
+                        console.log('User has', postsCount, 'stories');
+                        
+                        const statsElement = document.querySelector('.stat-item:nth-child(1) .stat-value');
+                        if (statsElement) {
+                            statsElement.textContent = postsCount;
+                        }
+                    } catch (statsError) {
+                        console.error('Error loading story stats:', statsError);
+                    }
+                    
+                    // Set form values
+                    const editUsernameInput = document.getElementById('edit-username');
+                    const editDescriptionInput = document.getElementById('edit-description');
+                    
+                    if (editUsernameInput) {
+                        editUsernameInput.value = userData.fullName || '';
+                    }
+                    
+                    if (editDescriptionInput) {
+                        editDescriptionInput.value = userData.description || '';
+                    }
+                    
+                    console.log('Profile loading completed successfully');
+                } catch (error) {
+                    console.error('Error loading profile:', error);
+                    throw new Error(`Failed to load profile: ${error.message}`);
+                }
+            }
+
+            // Initialize the page
+            document.addEventListener('DOMContentLoaded', async () => {
+                try {
+                    console.log('DOM Content Loaded');
+                    const loadingScreen = document.getElementById('loading-screen');
+                    const mainContent = document.getElementById('main-content');
+                    
+                    if (!loadingScreen || !mainContent) {
+                        throw new Error('Required elements not found');
+                    }
+
+                    mainContent.style.display = 'none';
+                    updateLoadingStatus('Initializing Firebase...');
+
+                    // Set timeout for initialization
+                    const initTimeout = setTimeout(() => {
+                        console.error('Initialization timeout');
+                        loadingScreen.innerHTML = `
+                            <div style="text-align: center; color: #ff4757;">
+                                <h3>Loading Timeout</h3>
+                                <p>The page is taking too long to load. Please check your internet connection.</p>
+                                <div id="init-status" style="margin: 20px 0; text-align: left; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+                                    <p>Firebase: ${initializationSteps.firebase ? '✅' : '❌'}</p>
+                                    <p>Auth: ${initializationSteps.auth ? '✅' : '❌'}</p>
+                                    <p>Profile: ${initializationSteps.profile ? '✅' : '❌'}</p>
+                                    <p>Stories: ${initializationSteps.stories ? '✅' : '❌'}</p>
+                                </div>
+                                <button onclick="window.location.reload()" style="
+                                    padding: 10px 20px;
+                                    background: #ff4757;
+                                    color: white;
+                                    border: none;
+                                    border-radius: 5px;
+                                    cursor: pointer;
+                                ">
+                                    Retry
+                                </button>
+                            </div>
+                        `;
+                    }, 15000);
+
+                    // Initialize theme
+                    const themeToggle = document.getElementById('theme-toggle');
+                    const html = document.documentElement;
+                    
+                    if (!themeToggle || !html) {
+                        throw new Error('Theme elements not found');
+                    }
+
+                    // Theme initialization
+                    const savedTheme = localStorage.getItem('theme') || 'light';
+                    html.setAttribute('data-theme', savedTheme);
+                    updateThemeIcon(savedTheme);
+
+                    themeToggle.addEventListener('click', () => {
+                        const currentTheme = html.getAttribute('data-theme');
+                        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                        html.setAttribute('data-theme', newTheme);
+                        localStorage.setItem('theme', newTheme);
+                        updateThemeIcon(newTheme);
+                    });
+
+                    initializationSteps.firebase = true;
+                    updateLoadingStatus('Checking authentication...');
+
+                    // Wait for auth to be ready
+                    const user = await new Promise((resolve) => {
+                        const unsubscribe = auth.onAuthStateChanged((user) => {
+                            unsubscribe();
+                            resolve(user);
+                        });
+                    });
+
+                    if (!user) {
+                        console.log('No user found, redirecting to login');
+                        window.location.href = 'login.html';
+                        return;
+                    }
+
+                    initializationSteps.auth = true;
+                    updateLoadingStatus('Loading your profile...');
+
+                    // Load user profile
+                    await loadUserProfile(user.uid);
+                    
+                    initializationSteps.profile = true;
+                    updateLoadingStatus('Loading your stories...');
+
+                    // Load stories
+                    await loadAllStories();
+                    
+                    initializationSteps.stories = true;
+                    updateLoadingStatus('Complete!');
+
+                    // Show main content
+                    loadingScreen.style.display = 'none';
+                    mainContent.style.display = 'block';
+                    clearTimeout(initTimeout);
+
+                } catch (error) {
+                    console.error('Error during initialization:', error);
+                    const loadingScreen = document.getElementById('loading-screen');
+                    if (loadingScreen) {
+                        loadingScreen.innerHTML = `
+                            <div style="text-align: center; color: #ff4757;">
+                                <h3>Error Loading Page</h3>
+                                <p>${error.message}</p>
+                                <button onclick="window.location.reload()" style="
+                                    padding: 10px 20px;
+                                    background: #ff4757;
+                                    color: white;
+                                    border: none;
+                                    border-radius: 5px;
+                                    cursor: pointer;
+                                    margin-top: 10px;
+                                ">
+                                    Try Again
+                                </button>
+                            </div>
+                        `;
+                    }
+                }
+            });
+
+            function updateThemeIcon(theme) {
+                const themeToggle = document.getElementById('theme-toggle');
+                if (themeToggle) {
+                    themeToggle.innerHTML = theme === 'light' ? '🌞' : '🌙';
+                }
+            }
+
+        } catch (error) {
+            console.error('Firebase initialization failed:', error);
+            document.getElementById('loading-screen').innerHTML = `
+                <div style="text-align: center; color: #ff4757;">
+                    <h3>Firebase Initialization Error</h3>
+                    <p>${error.message}</p>
+                    <button onclick="window.location.reload()" style="
+                        padding: 10px 20px;
+                        background: #ff4757;
+                        color: white;
+                        border: none;
+                        border-radius: 5px;
+                        cursor: pointer;
+                        margin-top: 10px;
+                    ">
+                        Retry
+                    </button>
+                </div>
+            `;
+            throw error;
+        }
+
+        async function loadAllStories() {
+            try {
+                const user = auth.currentUser;
+                if (!user) {
+                    throw new Error('No authenticated user found');
+                }
+                
+                console.log('Loading stories for user:', user.uid);
+                const container = document.getElementById('stories-container');
+                
+                // Show loading state
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px;">
+                        <p style="color: #636e72; font-size: 1.1rem;">
+                            Loading your stories...
+                        </p>
+                    </div>
+                `;
+
+                // Fetch all stories first
+                const storiesSnapshot = await db.collection('stories')
+                    .where('userId', '==', user.uid)
+                    .orderBy('createdAt', 'desc')
+                    .get();
+
+                if (storiesSnapshot.empty) {
+                    container.innerHTML = `
+                        <div style="text-align: center; padding: 40px;">
+                            <p style="color: #636e72; font-size: 1.1rem; margin-bottom: 20px;">
+                                You haven't shared any stories yet.
+                            </p>
+                            <a href="share-story.html" style="
+                                display: inline-block;
+                                background: var(--accent-color);
+                                color: white;
+                                padding: 12px 24px;
+                                border-radius: 8px;
+                                text-decoration: none;
+                                font-weight: 500;
+                                transition: transform 0.2s ease;
+                            ">
+                                Share Your First Story
+                            </a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                // Get all story IDs
+                const storyIds = storiesSnapshot.docs.map(doc => doc.id);
+                
+                // Process story IDs in chunks of 10 (Firestore limit for 'in' queries)
+                const chunkSize = 10;
+                const storyChunks = [];
+                for (let i = 0; i < storyIds.length; i += chunkSize) {
+                    storyChunks.push(storyIds.slice(i, i + chunkSize));
+                }
+
+                // Initialize maps for likes and comments
+                const likesMap = new Map();
+                const commentsMap = new Map();
+
+                // Process each chunk
+                for (const chunk of storyChunks) {
+                    try {
+                        // Fetch likes and comments for the current chunk
+                        const [chunkLikesSnapshot, chunkCommentsSnapshot] = await Promise.all([
+                            db.collection('likes')
+                                .where('storyId', 'in', chunk)
+                                .get(),
+                            db.collection('comments')
+                                .where('storyId', 'in', chunk)
+                                .get()
+                        ]);
+
+                        // Process likes
+                        chunkLikesSnapshot.forEach(doc => {
+                            const { storyId } = doc.data();
+                            likesMap.set(storyId, (likesMap.get(storyId) || 0) + 1);
+                        });
+
+                        // Process comments
+                        chunkCommentsSnapshot.forEach(doc => {
+                            const comment = doc.data();
+                            if (!commentsMap.has(comment.storyId)) {
+                                commentsMap.set(comment.storyId, []);
+                            }
+                            commentsMap.get(comment.storyId).push(comment);
+                        });
+                    } catch (error) {
+                        console.error('Error processing chunk:', error);
+                        // Continue with other chunks even if one fails
+                    }
+                }
+
+                const storiesHTML = storiesSnapshot.docs.map(doc => {
+                    const story = doc.data();
+                const date = story.createdAt ? new Date(story.createdAt.toDate()).toLocaleDateString() : 'Unknown date';
+                    const likesCount = likesMap.get(doc.id) || 0;
+                    const comments = commentsMap.get(doc.id) || [];
+                    const commentsCount = comments.length;
+
+                    // Sort comments by date (newest first)
+                    comments.sort((a, b) => b.createdAt.toDate() - a.createdAt.toDate());
+
+                    const commentsHTML = comments.map(comment => `
+                        <div class="comment">
+                            <div class="comment-header">
+                                <span class="comment-author">${comment.userName || 'Anonymous'}</span>
+                                <span class="comment-date">${new Date(comment.createdAt.toDate()).toLocaleDateString()}</span>
+                            </div>
+                            <div class="comment-text">${comment.text}</div>
+                        </div>
+                    `).join('');
+
+                return `
+                    <div class="story-card">
+                        <h3 class="story-title">${story.title || 'Untitled'}</h3>
+                        <p class="story-date">${date}</p>
+                            <div class="story-content" id="content-${doc.id}">
+                                ${story.story || story.description || 'No content'}
+                            </div>
+                            <div class="read-more" id="read-more-${doc.id}" onclick="toggleReadMore('${doc.id}')">📖 Read More</div>
+                            <div class="story-actions">
+                                <button class="action-btn" onclick="toggleLike('${doc.id}')">
+                                    ❤️ <span class="like-count" id="likes-${doc.id}">${likesCount}</span> Likes
+                                </button>
+                                <button class="action-btn" onclick="toggleComments('${doc.id}')">
+                                    💬 <span class="comment-count" id="comments-count-${doc.id}">${commentsCount}</span> Comments
+                                </button>
+                                <button class="action-btn edit-story" onclick="editStory('${doc.id}')">✏️ Edit</button>
+                                <button class="action-btn delete-story" onclick="deleteStory('${doc.id}')">🗑️ Delete</button>
+                            </div>
+                            <div class="comments-section" id="comments-${doc.id}">
+                                <div class="comment-input">
+                                    <input type="text" id="comment-input-${doc.id}" placeholder="Write a comment...">
+                                    <button onclick="addComment('${doc.id}')">Post</button>
+                                </div>
+                                <div class="comments-list" id="comments-list-${doc.id}">
+                                    ${commentsHTML}
+                                </div>
+                        </div>
+                    </div>
+                `;
+                });
+
+                container.innerHTML = storiesHTML.join('');
+                
+                // Check content heights after stories are loaded
+                setTimeout(checkContentHeights, 100);
+                console.log('Stories loaded successfully');
+            } catch (error) {
+                console.error('Error loading stories:', error);
+                const container = document.getElementById('stories-container');
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px;">
+                        <p style="color: #dc3545; font-size: 1.1rem; margin-bottom: 20px;">
+                            ${error.message}
+                        </p>
+                        <button onclick="loadAllStories()" style="
+                            background: var(--accent-color);
+                            color: white;
+                            padding: 12px 24px;
+                            border: none;
+                            border-radius: 8px;
+                            cursor: pointer;
+                            font-weight: 500;
+                        ">
+                            Try Again
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        function checkContentHeights() {
+            const contents = document.querySelectorAll('.story-content');
+            contents.forEach(content => {
+                const readMoreBtn = content.parentElement.querySelector('.read-more');
+                if (content.scrollHeight <= 160) {
+                    readMoreBtn.style.display = 'none';
+                } else {
+                    readMoreBtn.style.display = 'inline-block';
+                }
+            });
+        }
+
+        function toggleReadMore(storyId) {
+            const content = document.getElementById(`content-${storyId}`);
+            const readMoreBtn = document.getElementById(`read-more-${storyId}`);
+            
+            if (!content || !readMoreBtn) return;
+            
+            const isExpanded = content.classList.contains('expanded');
+            content.classList.toggle('expanded');
+            readMoreBtn.textContent = isExpanded ? '📖 Read More' : '📖 Read Less';
+            
+            if (isExpanded) {
+                // Scroll to the top of the story card when collapsing
+                content.parentElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        // Story interaction functions
+        async function toggleLike(storyId) {
+            try {
+                const user = auth.currentUser;
+                if (!user) {
+                    alert('Please log in to like stories');
+                    return;
+                }
+
+                const response = await fetch('http://localhost:5000/api/like', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        storyId: storyId,
+                        userId: user.uid
+                    })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    const likeButton = document.querySelector(`button.action-btn[onclick="toggleLike('${storyId}')"]`);
+                    const likeCount = document.getElementById(`likes-${storyId}`);
+                    
+                    if (data.liked) {
+                        likeButton.classList.add('liked');
+                        likeCount.textContent = parseInt(likeCount.textContent) + 1;
+                    } else {
+                        likeButton.classList.remove('liked');
+                        likeCount.textContent = parseInt(likeCount.textContent) - 1;
+                    }
+                } else {
+                    throw new Error(data.error);
+                }
+            } catch (error) {
+                console.error('Error toggling like:', error);
+                alert('Error updating like. Please try again.');
+            }
+        }
+
+        function toggleComments(storyId) {
+            const commentsSection = document.getElementById(`comments-${storyId}`);
+            commentsSection.classList.toggle('show');
+        }
+
+        function toggleShare(storyId) {
+            alert('Share feature coming soon!');
+        }
+
+        function saveStory(storyId) {
+            alert('Save feature coming soon!');
+        }
+
+        async function addComment(storyId) {
+            try {
+                const user = auth.currentUser;
+                if (!user) {
+                    alert('Please log in to comment');
+                    return;
+                }
+
+                const input = document.getElementById(`comment-input-${storyId}`);
+                const text = input.value.trim();
+                
+                if (!text) {
+                    alert('Please enter a comment');
+                    return;
+                }
+
+                const response = await fetch('http://localhost:5000/api/comment', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        storyId: storyId,
+                        userId: user.uid,
+                        userName: user.displayName || 'Anonymous',
+                        text: text
+                    })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    // Update UI
+                    const commentsList = document.getElementById(`comments-list-${storyId}`);
+                    const commentCount = document.getElementById(`comments-count-${storyId}`);
+                    
+                    const newComment = document.createElement('div');
+                    newComment.className = 'comment';
+                    newComment.innerHTML = `
+                        <div class="comment-header">
+                            <span class="comment-author">${user.displayName || 'Anonymous'}</span>
+                            <span class="comment-date">${new Date().toLocaleDateString()}</span>
+                        </div>
+                        <div class="comment-text">${text}</div>
+                    `;
+                    
+                    commentsList.insertBefore(newComment, commentsList.firstChild);
+                    commentCount.textContent = parseInt(commentCount.textContent) + 1;
+                    input.value = '';
+                } else {
+                    throw new Error(data.error);
+                }
+            } catch (error) {
+                console.error('Error adding comment:', error);
+                alert('Error posting comment. Please try again.');
+            }
+        }
+
+        async function loadComments(storyId) {
+            try {
+                const response = await fetch(`http://localhost:5000/api/comments/${storyId}`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    const commentsList = document.getElementById(`comments-list-${storyId}`);
+                    commentsList.innerHTML = data.comments.map(comment => `
+                        <div class="comment">
+                            <div class="comment-header">
+                                <span class="comment-author">${comment.userName}</span>
+                                <span class="comment-date">${new Date(comment.createdAt.toDate()).toLocaleDateString()}</span>
+                            </div>
+                            <div class="comment-text">${comment.text}</div>
+                        </div>
+                    `).join('');
+                } else {
+                    throw new Error(data.error);
+                }
+            } catch (error) {
+                console.error('Error loading comments:', error);
+            }
+        }
+
+        async function loadLikes(storyId) {
+            try {
+                const response = await fetch(`http://localhost:5000/api/likes/${storyId}`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    const likeCount = document.getElementById(`likes-${storyId}`);
+                    likeCount.textContent = data.likes;
+                } else {
+                    throw new Error(data.error);
+                }
+            } catch (error) {
+                console.error('Error loading likes:', error);
+            }
+        }
+
+        // Modal Functions
+        function openEditProfileModal() {
+            document.getElementById('editProfileModal').style.display = 'flex';
+        }
+
+        function closeEditProfileModal() {
+            document.getElementById('editProfileModal').style.display = 'none';
+        }
+
+        function openImageUpload() {
+            document.getElementById('imageUploadModal').style.display = 'flex';
+        }
+
+        function closeImageUploadModal() {
+            document.getElementById('imageUploadModal').style.display = 'none';
+        }
+
+        // Form Submissions
+        document.getElementById('editProfileForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const user = auth.currentUser;
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const fullName = document.getElementById('edit-username').value;
+            const description = document.getElementById('edit-description').value;
+
+            if (!fullName.trim()) {
+                alert('Please enter a name');
+                return;
+            }
+
+            // Show loading state
+            const submitButton = e.target.querySelector('button[type="submit"]');
+            const originalText = submitButton.textContent;
+            submitButton.textContent = 'Saving...';
+            submitButton.disabled = true;
+
+            try {
+                console.log('Starting profile update process');
+                console.log('User ID:', user.uid);
+                console.log('Updating fields:', { fullName, description });
+                
+                // Use the updateUserProfile function from database.js
+                await window.dbFunctions.updateUserProfile(user.uid, {
+                    fullName,
+                    description
+                });
+                
+                console.log('Profile updated successfully');
+                
+                // Reload the user profile to show the changes
+                loadUserProfile(user.uid);
+                
+                // Close the modal and show success message
+                closeEditProfileModal();
+                alert('Profile updated successfully!');
+            } catch (error) {
+                console.error('Error updating profile:', error);
+                alert('Error updating profile: ' + error.message);
+            } finally {
+                // Reset button state
+                submitButton.textContent = originalText;
+                submitButton.disabled = false;
+            }
+        });
+
+        // Add image preview functionality
+        document.getElementById('profile-image').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                // Validate file type
+                if (!file.type.match('image/(jpeg|png)')) {
+                    alert('Please select a JPG or PNG image file.');
+                    this.value = '';
+                    return;
+                }
+
+                // Validate file size (5MB max)
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('Please select an image less than 5MB in size.');
+                    this.value = '';
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const previewDiv = document.getElementById('image-preview');
+                    const previewImg = document.getElementById('preview-img');
+                    previewImg.src = e.target.result;
+                    previewDiv.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Updated form submission
+        document.getElementById('imageUploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const submitButton = e.target.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+            submitButton.textContent = 'Uploading...';
+            
+            try {
+                const user = auth.currentUser;
+                if (!user) {
+                    throw new Error('Please log in to upload a profile picture');
+                }
+
+                const fileInput = document.getElementById('profile-image');
+                const file = fileInput.files[0];
+                if (!file) {
+                    throw new Error('Please select an image file');
+                }
+
+                if (!file.type.match('image/(jpeg|png)')) {
+                    throw new Error('Please select a JPG or PNG image');
+                }
+
+                if (file.size > 5 * 1024 * 1024) {
+                    throw new Error('File size must be less than 5MB');
+                }
+
+                console.log('Starting upload for file:', file.name);
+                
+                // Try the upload
+                const downloadURL = await uploadImage(file, user.uid);
+
+                // Update profiles
+                await Promise.all([
+                    user.updateProfile({
+                        photoURL: downloadURL
+                    }),
+                    db.collection('users').doc(user.uid).update({
+                        profilePic: downloadURL
+                    })
+                ]);
+                
+                // Update UI
+                document.getElementById('profile-pic').src = downloadURL;
+                closeImageUploadModal();
+                alert('Profile picture updated successfully!');
+
+            } catch (error) {
+                console.error('Error:', error);
+                alert(error.message);
+            } finally {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Upload Image';
+            }
+        });
+
+        // Simple upload function
+        async function uploadImage(file, userId) {
+            const storageRef = storage.ref();
+            const fileRef = storageRef.child(`profilePictures/${userId}/${Date.now()}_${file.name}`);
+            
+            try {
+                const snapshot = await fileRef.put(file);
+                console.log('Upload successful');
+                const downloadURL = await snapshot.ref.getDownloadURL();
+                console.log('File available at:', downloadURL);
+                return downloadURL;
+            } catch (error) {
+                console.error('Upload failed:', error);
+                throw error;
+                }
+        }
+
+        // Add this function to test upload directly
+        window.testUpload = async () => {
+            try {
+                const user = auth.currentUser;
+                if (!user) {
+                    throw new Error('No user logged in');
+                }
+                
+                const testBlob = new Blob(['test'], { type: 'text/plain' });
+                const testFile = new File([testBlob], 'test.txt', { type: 'text/plain' });
+                
+                console.log('Testing upload with dummy file...');
+                const downloadURL = await uploadImage(testFile, user.uid);
+                console.log('Test upload successful:', downloadURL);
+                
+                // Clean up test file
+                const fileRef = storage.ref(downloadURL);
+                await fileRef.delete();
+                console.log('Test file cleaned up');
+                
+                alert('Storage test successful!');
+            } catch (error) {
+                console.error('Test upload failed:', error);
+                alert('Storage test failed: ' + error.message);
+            }
+        };
+    </script>
+</body>
+</html> 

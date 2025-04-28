@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stories - Unspoken Journeys</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: url('https://images.unsplash.com/photo-1457369804613-52c61a468e7d?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8c3RvcnklMjBiYWNrZ3JvdW5kfGVufDB8fDB8fHww') no-repeat center center fixed;
+      background-size: cover;
+      min-height: 100vh;
+      color: #333;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+      color: white;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    }
+
+    .header h1 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+    }
+
+    .write-btn {
+      display: inline-block;
+      padding: 12px 30px;
+      background: linear-gradient(45deg, #ff4757, #ff6b81);
+      color: white;
+      border: none;
+      border-radius: 25px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      text-decoration: none;
+      margin-bottom: 20px;
+    }
+
+    .write-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(255, 71, 87, 0.4);
+    }
+
+    .stories-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.98);
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
+      backdrop-filter: blur(10px);
+      margin-bottom: 25px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .profile {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .profile img {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      margin-right: 10px;
+      object-fit: cover;
+      border: 2px solid #fff;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .profile-info {
+      flex: 1;
+    }
+
+    .username {
+      font-weight: 600;
+      color: #2d3436;
+      margin: 0;
+      font-size: 1.1rem;
+    }
+
+    .timestamp {
+      font-size: 0.85rem;
+      color: #636e72;
+      margin: 0;
+    }
+
+    .title {
+      font-size: 1.6rem;
+      color: #2d3436;
+      margin-bottom: 15px;
+      line-height: 1.4;
+      font-weight: 600;
+    }
+
+    .content {
+      color: #636e72;
+      line-height: 1.8;
+      margin-bottom: 20px;
+      max-height: 160px;
+      overflow: hidden;
+      position: relative;
+      font-size: 1.1rem;
+      transition: all 0.3s ease;
+    }
+
+    .content.expanded {
+      max-height: none !important;
+    }
+
+    .content:not(.expanded)::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 70px;
+      background: linear-gradient(transparent, rgba(255, 255, 255, 0.98));
+    }
+
+    .read-more {
+      color: #ff4757;
+      cursor: pointer;
+      font-weight: 500;
+      display: inline-block;
+      margin-top: 10px;
+      transition: color 0.3s ease;
+      padding: 5px 10px;
+      border-radius: 15px;
+      background: rgba(255, 71, 87, 0.1);
+      user-select: none;
+    }
+
+    .read-more:hover {
+      color: #ff6b81;
+      background: rgba(255, 71, 87, 0.2);
+    }
+
+    .hashtags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 15px;
+    }
+
+    .hashtag {
+      background: #f1f2f6;
+      color: #2d3436;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      transition: all 0.3s ease;
+    }
+
+    .hashtag:hover {
+      background: #dfe6e9;
+      transform: translateY(-2px);
+    }
+
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 15px;
+      border-top: 1px solid #f1f2f6;
+      margin-top: auto;
+    }
+
+    .actions span {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #636e72;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      padding: 6px 12px;
+      border-radius: 20px;
+      background: #f1f2f6;
+    }
+
+    .actions span:hover {
+      color: #ff4757;
+      background: #dfe6e9;
+      transform: translateY(-2px);
+    }
+
+    .share-options {
+      position: absolute;
+      background: white;
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      display: none;
+      z-index: 1;
+    }
+
+    .share-options.show {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 768px) {
+      .header h1 {
+        font-size: 2rem;
+      }
+
+      .stories-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .write-btn {
+        padding: 10px 20px;
+        font-size: 1rem;
+      }
+
+      .card {
+        aspect-ratio: auto;
+        min-height: auto;
+      }
+    }
+
+    /* Bottom Navigation */
+    .bottom-nav {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      padding: 15px 0;
+      box-shadow: 0px -4px 8px rgba(0, 0, 0, 0.5);
+    }
+
+    .bottom-nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      padding: 10px 15px;
+      transition: background 0.3s, transform 0.2s;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+
+    .bottom-nav a:hover {
+      background: #ffcc00;
+      color: #141e30;
+      transform: scale(1.1);
+    }
+
+    /* Search and Filter Styles */
+    .search-container {
+      background: rgba(255, 255, 255, 0.98);
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .search-box {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .search-input {
+      flex: 1;
+      padding: 12px 20px;
+      border: 2px solid #f1f2f6;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: #ff4757;
+      box-shadow: 0 0 5px rgba(255, 71, 87, 0.2);
+    }
+
+    .search-button {
+      padding: 12px 25px;
+      background: linear-gradient(45deg, #ff4757, #ff6b81);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+
+    .search-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(255, 71, 87, 0.3);
+    }
+
+    .filter-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .filter-tag {
+      padding: 8px 15px;
+      background: #f1f2f6;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 0.9rem;
+    }
+
+    .filter-tag.active {
+      background: #ff4757;
+      color: white;
+    }
+
+    .filter-tag:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    /* Update popup styles for full page */
+    .popup-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.98);
+      display: none;
+      z-index: 1000;
+      overflow-y: auto;
+    }
+
+    .popup-content {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      min-height: 100vh;
+      animation: slideIn 0.3s ease;
+    }
+
+    @keyframes slideIn {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .popup-header {
+      position: sticky;
+      top: 0;
+      background: white;
+      padding: 20px 0;
+      margin-bottom: 30px;
+      border-bottom: 2px solid #f1f2f6;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1001;
+    }
+
+    .popup-title {
+      font-size: 2rem;
+      color: #2d3436;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .search-term {
+      font-size: 1.2rem;
+      color: #ff4757;
+      font-weight: normal;
+    }
+
+    .close-popup {
+      background: #ff4757;
+      border: none;
+      font-size: 1.2rem;
+      cursor: pointer;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 25px;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .close-popup:hover {
+      background: #ff6b81;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(255, 71, 87, 0.3);
+    }
+
+    .popup-results {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 30px;
+      padding: 20px 0;
+    }
+
+    .no-results {
+      text-align: center;
+      padding: 100px 20px;
+      grid-column: 1 / -1;
+    }
+
+    .no-results h3 {
+      font-size: 1.8rem;
+      color: #2d3436;
+      margin-bottom: 15px;
+    }
+
+    .no-results p {
+      color: #636e72;
+      font-size: 1.1rem;
+      margin: 10px 0;
+    }
+
+    .search-stats {
+      color: #636e72;
+      font-size: 1.1rem;
+      margin-bottom: 20px;
+      padding: 0 20px;
+    }
+
+    @media (max-width: 768px) {
+      .popup-content {
+        padding: 15px;
+      }
+
+      .popup-header {
+        padding: 15px 0;
+      }
+
+      .popup-title {
+        font-size: 1.5rem;
+      }
+
+      .search-term {
+        font-size: 1rem;
+      }
+
+      .popup-results {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Discover Stories</h1>
+    </div>
+
+    <!-- Search and Filter Section -->
+    <div class="search-container">
+      <div class="search-box">
+        <input type="text" id="search-input" class="search-input" placeholder="Search stories by title, description, or hashtags...">
+        <button onclick="searchStories()" class="search-button">Search</button>
+      </div>
+      <div id="filter-container" class="filter-container">
+        <!-- Filters will be added dynamically -->
+      </div>
+    </div>
+
+    <div class="stories-grid" id="stories-container">
+      <!-- Stories will be loaded here -->
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <a href="index.html">Home</a>
+    <a href="stories.html">Stories</a>
+    <a href="share-story.html">Share Your Story</a>
+    <a href="contact.html">Contact</a>
+    <a href="about-us.html">About Us</a>
+  </div>
+
+  <!-- Update popup HTML structure -->
+  <div class="popup-overlay" id="searchPopup">
+    <div class="popup-content">
+      <div class="popup-header">
+        <h2 class="popup-title">
+          Search Results <span class="search-term" id="searchTermDisplay"></span>
+        </h2>
+        <button class="close-popup" onclick="closePopup()">
+          <span>Back to Stories</span> ×
+        </button>
+      </div>
+      <div class="search-stats" id="searchStats"></div>
+      <div class="popup-results" id="popupResults">
+        <!-- Search results will be displayed here -->
+      </div>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+  <script>
+    // Initialize Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyAkR4rQhTC9P9rIUpJzLUGLPDIxpYW0nrc",
+      authDomain: "unspoken-journeys.firebaseapp.com",
+      projectId: "unspoken-journeys",
+      storageBucket: "unspoken-journeys.appspot.com",
+      messagingSenderId: "1085239903802",
+      appId: "1:1085239903802:web:1c8140e85ab72645f21703",
+      measurementId: "G-CHFJNLYK08"
+    };
+
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+
+    const db = firebase.firestore();
+    const auth = firebase.auth();
+    let allStories = [];
+
+    // Load stories when the page loads
+    window.addEventListener('load', loadStories);
+
+    async function loadStories() {
+      try {
+        const storiesSnapshot = await db.collection('stories')
+          .orderBy('createdAt', 'desc')
+          .get();
+
+        allStories = await Promise.all(storiesSnapshot.docs.map(async doc => {
+          const story = doc.data();
+          const userDoc = await db.collection('users').doc(story.userId).get();
+          const userData = userDoc.data() || {};
+          return {
+            id: doc.id,
+            ...story,
+            userData
+          };
+        }));
+
+        // Extract unique hashtags for filters
+        const hashtags = new Set();
+        allStories.forEach(story => {
+          if (story.hashtags && Array.isArray(story.hashtags)) {
+            story.hashtags.forEach(tag => hashtags.add(tag));
+          }
+        });
+
+        // Create filter tags
+        const filterContainer = document.getElementById('filter-container');
+        filterContainer.innerHTML = Array.from(hashtags)
+          .map(tag => `<span class="filter-tag" onclick="toggleFilter('${tag}')">#${tag}</span>`)
+          .join('');
+
+        displayFilteredStories(allStories);
+      } catch (error) {
+        console.error('Error loading stories:', error);
+        document.getElementById('stories-container').innerHTML = 
+          '<p style="text-align: center; color: white; font-size: 1.2rem;">Error loading stories. Please try again later.</p>';
+      }
+    }
+
+    function displayFilteredStories(stories) {
+      const container = document.getElementById('stories-container');
+      
+      if (stories.length === 0) {
+        container.innerHTML = '<p style="text-align: center; color: white; font-size: 1.2rem;">No stories found matching your search.</p>';
+        return;
+      }
+
+      container.innerHTML = stories.map(story => {
+        return `
+          <div class="card">
+            <div class="profile">
+              <img src="${story.userData?.profilePic || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(story.userData?.username || 'User')}" alt="Profile">
+              <div class="profile-info">
+                <h3 class="username">${story.userData?.username || 'Anonymous'}</h3>
+                <p class="timestamp">${new Date(story.createdAt?.toDate()).toLocaleDateString()}</p>
+              </div>
+            </div>
+            <h2 class="title">${story.title}</h2>
+            <div class="content" id="content-${story.id}">
+              ${story.story}
+            </div>
+            <div class="read-more" id="read-more-${story.id}" onclick="toggleReadMore('${story.id}')">📖 Read More</div>
+            <div class="hashtags">
+              ${story.hashtags?.map(tag => `<span class="hashtag">#${tag}</span>`).join('') || ''}
+            </div>
+            <div class="actions">
+              <span onclick="toggleLike('${story.id}')">❤️ Like</span>
+              <span onclick="toggleComments('${story.id}')">💬 Comment</span>
+              <span onclick="toggleShare('${story.id}')">📤 Share</span>
+              <span onclick="saveStory('${story.id}')">🔖 Save</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function searchStories() {
+      const searchTerm = document.getElementById('search-input').value.toLowerCase();
+      const activeFilters = Array.from(document.getElementsByClassName('filter-tag active'))
+        .map(tag => tag.textContent.slice(1)); // Remove # from hashtag
+
+      const filteredStories = allStories.filter(story => {
+        const matchesSearch = 
+          (story.title && story.title.toLowerCase().includes(searchTerm)) ||
+          (story.story && story.story.toLowerCase().includes(searchTerm)) ||
+          (story.hashtags && story.hashtags.some(tag => tag.toLowerCase().includes(searchTerm)));
+
+        const matchesFilters = 
+          activeFilters.length === 0 || 
+          (story.hashtags && story.hashtags.some(tag => activeFilters.includes(tag)));
+
+        return matchesSearch && matchesFilters;
+      });
+
+      displayFilteredStories(filteredStories);
+    }
+
+    function toggleFilter(tag) {
+      const filterElement = Array.from(document.getElementsByClassName('filter-tag'))
+        .find(el => el.textContent === `#${tag}`);
+      
+      filterElement.classList.toggle('active');
+      searchStories();
+    }
+
+    function toggleReadMore(storyId) {
+      const content = document.getElementById(`content-${storyId}`);
+      const readMoreBtn = document.getElementById(`read-more-${storyId}`);
+      content.classList.toggle('expanded');
+      readMoreBtn.textContent = content.classList.contains('expanded') ? '📖 Read Less' : '📖 Read More';
+    }
+
+    // Add search input event listener for real-time search
+    document.getElementById('search-input').addEventListener('input', debounce(searchStories, 300));
+
+    // Debounce function to prevent too many search operations
+    function debounce(func, wait) {
+      let timeout;
+      return function executedFunction(...args) {
+        const later = () => {
+          clearTimeout(timeout);
+          func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+      };
+    }
+
+    // Your existing interaction functions
+    function toggleLike(storyId) {
+      alert('Like feature coming soon!');
+    }
+
+    function toggleComments(storyId) {
+      alert('Comments feature coming soon!');
+    }
+
+    function toggleShare(storyId) {
+      alert('Share feature coming soon!');
+    }
+
+    function saveStory(storyId) {
+      alert('Save feature coming soon!');
+    }
+
+    function closePopup() {
+      const searchPopup = document.getElementById('searchPopup');
+      searchPopup.style.display = 'none';
+      document.body.style.overflow = 'auto'; // Restore background scrolling
+    }
+
+    // Close popup when clicking outside
+    document.getElementById('searchPopup').addEventListener('click', function(event) {
+      if (event.target === this) {
+        closePopup();
+      }
+    });
+
+    // Close popup with Escape key
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') {
+        closePopup();
+      }
+    });
+  </script>
+</body>
+</html>
