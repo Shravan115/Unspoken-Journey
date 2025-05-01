@@ -14,6 +14,7 @@
     <!-- Import database.js and auth-helper.js -->
     <script src="database.js"></script>
     <script src="auth-helper.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
     <style>
         :root {
             --primary-bg: #fafafa;
@@ -91,6 +92,56 @@
             display: flex;
             align-items: center;
             margin-bottom: 30px;
+        }
+
+        .profile-picture-container {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin-right: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .profile-picture {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--accent-color);
+            background: #f0f0f0;
+            display: block;
+        }
+
+        .profile-picture:hover {
+            opacity: 0.8;
+        }
+
+        .profile-picture-upload {
+            display: none;
+        }
+
+        .profile-picture-upload-label {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            background: var(--accent-color);
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 2;
+            font-size: 18px;
+        }
+
+        .profile-picture-upload-label:hover {
+            transform: scale(1.1);
         }
 
         .profile-info {
@@ -396,27 +447,37 @@
         /* Bottom Navigation */
         .bottom-nav {
             width: 100%;
-            background: var(--secondary-bg);
+            background: rgba(10, 10, 10, 0.98);
             display: flex;
-            justify-content: space-around;
+            justify-content: space-between;
             align-items: center;
             position: fixed;
             bottom: 0;
             left: 0;
-            padding: 10px 0;
-            border-top: 1px solid var(--border-color);
+            padding: 0;
+            box-shadow: none;
+            border: none;
+            z-index: 100;
         }
 
         .bottom-nav a {
-            color: var(--text-primary);
+            color: #fff;
             text-decoration: none;
-            font-size: 0.9rem;
-            padding: 8px 12px;
-            border-radius: 4px;
+            font-weight: 700;
+            padding: 18px 0;
+            flex: 1 1 0;
+            text-align: center;
+            font-size: 16px;
+            background: none;
+            border: none;
+            box-shadow: none;
+            transition: background 0.2s, color 0.2s;
         }
 
         .bottom-nav a:hover {
-            background: var(--hover-color);
+            background: rgba(255,255,255,0.04);
+            color: #fff;
+            transform: none;
         }
 
         @media (max-width: 768px) {
@@ -646,9 +707,12 @@
     <div class="container" id="main-content" style="display: none;">
         <div class="profile-section">
             <div class="profile-header">
-                <div class="profile-pic-container">
-                    <img id="profile-pic" src="https://ui-avatars.com/api/?name=User" alt="Profile Picture">
-                    <button class="edit-btn" onclick="openImageUpload()">Edit</button>
+                <div class="profile-picture-container">
+                    <img id="profilePicture" class="profile-picture" src="https://ui-avatars.com/api/?name=User" alt="Profile Picture" onerror="this.onerror=null;this.src='https://ui-avatars.com/api/?name=User';">
+                    <input type="file" id="profilePictureUpload" class="profile-picture-upload" accept="image/*">
+                    <label for="profilePictureUpload" class="profile-picture-upload-label">
+                        <i class="fas fa-camera"></i>
+                    </label>
                 </div>
                 <div class="profile-info">
                     <h1 id="username" class="username">Welcome</h1>
@@ -659,16 +723,16 @@
 
             <div class="profile-stats">
                 <div class="stat-item">
-                    <span class="stat-value">0</span>
-                    <span class="stat-label">Stories</span>
+                    <span class="stat-value" id="followers-count">0</span>
+                    <span class="stat-label">Followers</span>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-value">0</span>
-                    <span class="stat-label">Likes</span>
+                    <span class="stat-value" id="following-count">0</span>
+                    <span class="stat-label">Following</span>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-value">0</span>
-                    <span class="stat-label">Comments</span>
+                    <span class="stat-value" id="posts-count">0</span>
+                    <span class="stat-label">Posts</span>
                 </div>
             </div>
         </div>
@@ -721,6 +785,18 @@
         </div>
     </div>
 
+    <!-- Cropping Modal -->
+    <div id="cropperModal" class="modal" style="display:none; align-items:center; justify-content:center;">
+        <div class="modal-content" style="max-width:400px;">
+            <span class="close-modal" onclick="closeCropperModal()">&times;</span>
+            <h2>Crop Profile Picture</h2>
+            <div style="width:100%; text-align:center;">
+                <img id="cropperImage" style="max-width:100%; max-height:300px; display:block; margin:0 auto;">
+            </div>
+            <button id="saveCroppedBtn" class="save-btn" style="margin-top:20px; width:100%;">Save as Profile Picture</button>
+        </div>
+    </div>
+
     <div class="bottom-nav">
         <a href="index.html">Home</a>
         <a href="stories.html">Stories</a>
@@ -731,6 +807,172 @@
 
     <!-- Firebase Scripts -->
     <script>
+        // Add Font Awesome for the camera icon
+        const fontAwesomeLink = document.createElement('link');
+        fontAwesomeLink.rel = 'stylesheet';
+        fontAwesomeLink.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css';
+        document.head.appendChild(fontAwesomeLink);
+
+        // Initialize auth state
+        authHelper.init().then(() => {
+            // Check if user is authenticated
+            authHelper.requireAuth().then(isAuthenticated => {
+                if (isAuthenticated) {
+                    loadUserProfile();
+                    loadUserStories();
+                }
+            });
+        });
+
+        // Make cropper globally accessible
+        let cropper = null;
+        let croppedBlob = null;
+        let originalFileName = '';
+
+        // Handle profile picture upload
+        document.getElementById('profilePictureUpload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            // Validate file type
+            if (!file.type.startsWith('image/')) {
+                alert('Please select an image file');
+                return;
+            }
+            if (file.size > 5 * 1024 * 1024) {
+                alert('Image size should be less than 5MB');
+                return;
+            }
+            // Show cropping modal
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                document.getElementById('cropperImage').src = event.target.result;
+                document.getElementById('cropperModal').style.display = 'flex';
+                if (cropper) {
+                    cropper.destroy();
+                }
+                setTimeout(() => {
+                    cropper = new Cropper(document.getElementById('cropperImage'), {
+                        aspectRatio: 1,
+                        viewMode: 1,
+                        autoCropArea: 1,
+                        movable: true,
+                        zoomable: true,
+                        rotatable: false,
+                        scalable: false,
+                        responsive: true,
+                        background: false
+                    });
+                }, 100);
+            };
+            reader.readAsDataURL(file);
+            originalFileName = file.name;
+        });
+
+        // Save cropped image as profile picture
+        document.getElementById('saveCroppedBtn').addEventListener('click', async function() {
+            if (!cropper) return;
+            // Get cropped canvas
+            const canvas = cropper.getCroppedCanvas({ width: 400, height: 400 });
+            if (!canvas) {
+                alert('Failed to crop image.');
+                return;
+            }
+            // Convert canvas to blob
+            canvas.toBlob(async function(blob) {
+                if (!blob) {
+                    alert('Failed to crop image.');
+                    return;
+                }
+                croppedBlob = blob;
+                // Upload cropped image
+                await uploadCroppedProfilePicture(blob, originalFileName);
+            }, 'image/jpeg', 0.95);
+        });
+
+        async function uploadCroppedProfilePicture(blob, originalFileName) {
+            if (window.isUploadingProfilePic) return;
+            window.isUploadingProfilePic = true;
+            try {
+                // Check Firebase and auth
+                if (typeof firebase === 'undefined' || !firebase.apps.length) {
+                    alert('Firebase is not initialized. Please refresh the page.');
+                    window.isUploadingProfilePic = false;
+                    return;
+                }
+                const user = authHelper.getCurrentUser();
+                if (!user) {
+                    alert('You must be logged in to upload a profile picture');
+                    window.isUploadingProfilePic = false;
+                    return;
+                }
+                // Show loading state
+                const profilePicture = document.getElementById('profilePicture');
+                profilePicture.style.opacity = '0.5';
+                profilePicture.style.filter = 'blur(2px)';
+                // Create a unique filename
+                const timestamp = Date.now();
+                const fileExtension = originalFileName.split('.').pop();
+                const fileName = `profile_${user.uid}_${timestamp}.${fileExtension}`;
+                // Upload to Firebase Storage
+                const storageRef = firebase.storage().ref();
+                const profilePicRef = storageRef.child(`profilePictures/${user.uid}/${fileName}`);
+                const snapshot = await profilePicRef.put(blob);
+                const downloadURL = await snapshot.ref.getDownloadURL();
+                // Update Firestore
+                await firebase.firestore().collection('users').doc(user.uid).update({
+                    profilePic: downloadURL
+                });
+                // Update UI
+                profilePicture.src = downloadURL;
+                profilePicture.style.opacity = '1';
+                profilePicture.style.filter = '';
+                closeCropperModal();
+                alert('Profile picture updated successfully!');
+            } catch (error) {
+                console.error('Error uploading profile picture:', error);
+                alert('Failed to upload profile picture. Reason: ' + (error.message || error));
+                const profilePicture = document.getElementById('profilePicture');
+                profilePicture.src = "https://ui-avatars.com/api/?name=User";
+                profilePicture.style.opacity = '1';
+                profilePicture.style.filter = '';
+            } finally {
+                window.isUploadingProfilePic = false;
+            }
+        }
+
+        function closeCropperModal() {
+            document.getElementById('cropperModal').style.display = 'none';
+            if (cropper) {
+                cropper.destroy();
+                cropper = null;
+            }
+            croppedBlob = null;
+            originalFileName = '';
+        }
+
+        // Load user profile
+        async function loadUserProfile() {
+            try {
+                const user = authHelper.getCurrentUser();
+                if (!user) return;
+
+                const profile = await getUserProfile(user.uid);
+                
+                // Update UI
+                document.getElementById('username').textContent = profile.fullName;
+                document.getElementById('user-description').textContent = profile.description;
+                document.getElementById('profilePicture').src = profile.profilePic || "https://ui-avatars.com/api/?name=" + encodeURIComponent(profile.fullName || "User");
+                
+                // Update stats
+                document.getElementById('followers-count').textContent = profile.followersCount || 0;
+                document.getElementById('following-count').textContent = profile.followingCount || 0;
+                document.getElementById('posts-count').textContent = profile.storiesCount || 0;
+            } catch (error) {
+                console.error('Error loading user profile:', error);
+            }
+        }
+
         // Initialize Firebase and declare services globally
         let db, auth, storage;
 
@@ -810,7 +1052,7 @@
                     // Update UI with user data
                     const usernameElement = document.getElementById('username');
                     const descriptionElement = document.getElementById('user-description');
-                    const profilePicElement = document.getElementById('profile-pic');
+                    const profilePicElement = document.getElementById('profilePicture');
                     
                     if (usernameElement) {
                         usernameElement.textContent = userData.fullName || 'User';
@@ -837,7 +1079,7 @@
                         const postsCount = storiesSnapshot.size;
                         console.log('User has', postsCount, 'stories');
                         
-                        const statsElement = document.querySelector('.stat-item:nth-child(1) .stat-value');
+                        const statsElement = document.querySelector('.stat-item:nth-child(3) .stat-value');
                         if (statsElement) {
                             statsElement.textContent = postsCount;
                         }
@@ -1147,8 +1389,9 @@
                                 <button class="action-btn" onclick="toggleComments('${doc.id}')">
                                     💬 <span class="comment-count" id="comments-count-${doc.id}">${commentsCount}</span> Comments
                                 </button>
-                                <button class="action-btn edit-story" onclick="editStory('${doc.id}')">✏️ Edit</button>
-                                <button class="action-btn delete-story" onclick="deleteStory('${doc.id}')">🗑️ Delete</button>
+                                <button class="action-btn" onclick="shareStory('${doc.id}')">
+                                    📤 Share
+                                </button>
                             </div>
                             <div class="comments-section" id="comments-${doc.id}">
                                 <div class="comment-input">
@@ -1221,153 +1464,74 @@
         }
 
         // Story interaction functions
-        async function toggleLike(storyId) {
-            try {
-                const user = auth.currentUser;
-                if (!user) {
-                    alert('Please log in to like stories');
-                    return;
-                }
+        function toggleLike(storyId) {
+            const key = `like_${storyId}`;
+            let liked = localStorage.getItem(key) === '1';
+            let countElem = document.getElementById(`likes-${storyId}`);
+            let count = parseInt(countElem.textContent) || 0;
+            if (liked) {
+                localStorage.setItem(key, '0');
+                countElem.textContent = count - 1;
+            } else {
+                localStorage.setItem(key, '1');
+                countElem.textContent = count + 1;
+            }
+        }
 
-                const response = await fetch('http://localhost:5000/api/like', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        storyId: storyId,
-                        userId: user.uid
-                    })
-                });
+        function addComment(storyId) {
+            const input = document.getElementById(`comment-input-${storyId}`);
+            const text = input.value.trim();
+            if (!text) {
+                alert('Please enter a comment');
+                return;
+            }
+            const key = `comments_${storyId}`;
+            let comments = JSON.parse(localStorage.getItem(key) || '[]');
+            const comment = {
+                user: 'You',
+                text: text,
+                date: new Date().toLocaleDateString()
+            };
+            comments.unshift(comment);
+            localStorage.setItem(key, JSON.stringify(comments));
+            renderComments(storyId);
+            input.value = '';
+            document.getElementById(`comments-count-${storyId}`).textContent = comments.length;
+        }
 
-                const data = await response.json();
-                if (response.ok) {
-                    const likeButton = document.querySelector(`button.action-btn[onclick="toggleLike('${storyId}')"]`);
-                    const likeCount = document.getElementById(`likes-${storyId}`);
-                    
-                    if (data.liked) {
-                        likeButton.classList.add('liked');
-                        likeCount.textContent = parseInt(likeCount.textContent) + 1;
-                    } else {
-                        likeButton.classList.remove('liked');
-                        likeCount.textContent = parseInt(likeCount.textContent) - 1;
-                    }
-                } else {
-                    throw new Error(data.error);
-                }
-            } catch (error) {
-                console.error('Error toggling like:', error);
-                alert('Error updating like. Please try again.');
+        function renderComments(storyId) {
+            const key = `comments_${storyId}`;
+            let comments = JSON.parse(localStorage.getItem(key) || '[]');
+            const commentsList = document.getElementById(`comments-list-${storyId}`);
+            if (commentsList) {
+                commentsList.innerHTML = comments.map(comment => `
+                    <div class="comment">
+                        <div class="comment-header">
+                            <span class="comment-author">${comment.user}</span>
+                            <span class="comment-date">${comment.date}</span>
+                        </div>
+                        <div class="comment-text">${comment.text}</div>
+                    </div>
+                `).join('');
             }
         }
 
         function toggleComments(storyId) {
             const commentsSection = document.getElementById(`comments-${storyId}`);
             commentsSection.classList.toggle('show');
+            renderComments(storyId);
         }
 
-        function toggleShare(storyId) {
-            alert('Share feature coming soon!');
-        }
-
-        function saveStory(storyId) {
-            alert('Save feature coming soon!');
-        }
-
-        async function addComment(storyId) {
-            try {
-                const user = auth.currentUser;
-                if (!user) {
-                    alert('Please log in to comment');
-                    return;
-                }
-
-                const input = document.getElementById(`comment-input-${storyId}`);
-                const text = input.value.trim();
-                
-                if (!text) {
-                    alert('Please enter a comment');
-                    return;
-                }
-
-                const response = await fetch('http://localhost:5000/api/comment', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        storyId: storyId,
-                        userId: user.uid,
-                        userName: user.displayName || 'Anonymous',
-                        text: text
-                    })
-                });
-
-                const data = await response.json();
-                if (response.ok) {
-                    // Update UI
-                    const commentsList = document.getElementById(`comments-list-${storyId}`);
-                    const commentCount = document.getElementById(`comments-count-${storyId}`);
-                    
-                    const newComment = document.createElement('div');
-                    newComment.className = 'comment';
-                    newComment.innerHTML = `
-                        <div class="comment-header">
-                            <span class="comment-author">${user.displayName || 'Anonymous'}</span>
-                            <span class="comment-date">${new Date().toLocaleDateString()}</span>
-                        </div>
-                        <div class="comment-text">${text}</div>
-                    `;
-                    
-                    commentsList.insertBefore(newComment, commentsList.firstChild);
-                    commentCount.textContent = parseInt(commentCount.textContent) + 1;
-                    input.value = '';
-                } else {
-                    throw new Error(data.error);
-                }
-            } catch (error) {
-                console.error('Error adding comment:', error);
-                alert('Error posting comment. Please try again.');
-            }
-        }
-
-        async function loadComments(storyId) {
-            try {
-                const response = await fetch(`http://localhost:5000/api/comments/${storyId}`);
-                const data = await response.json();
-                
-                if (response.ok) {
-                    const commentsList = document.getElementById(`comments-list-${storyId}`);
-                    commentsList.innerHTML = data.comments.map(comment => `
-                        <div class="comment">
-                            <div class="comment-header">
-                                <span class="comment-author">${comment.userName}</span>
-                                <span class="comment-date">${new Date(comment.createdAt.toDate()).toLocaleDateString()}</span>
-                            </div>
-                            <div class="comment-text">${comment.text}</div>
-                        </div>
-                    `).join('');
-                } else {
-                    throw new Error(data.error);
-                }
-            } catch (error) {
-                console.error('Error loading comments:', error);
-            }
-        }
-
-        async function loadLikes(storyId) {
-            try {
-                const response = await fetch(`http://localhost:5000/api/likes/${storyId}`);
-                const data = await response.json();
-                
-                if (response.ok) {
-                    const likeCount = document.getElementById(`likes-${storyId}`);
-                    likeCount.textContent = data.likes;
-                } else {
-                    throw new Error(data.error);
-                }
-            } catch (error) {
-                console.error('Error loading likes:', error);
+        function shareStory(storyId) {
+            const url = window.location.origin + window.location.pathname + `#story-${storyId}`;
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Check out this story!',
+                    url: url
+                }).catch(() => {});
+            } else {
+                navigator.clipboard.writeText(url);
+                alert('Story link copied to clipboard!');
             }
         }
 
@@ -1499,7 +1663,7 @@
                 console.log('Starting upload for file:', file.name);
                 
                 // Try the upload
-                const downloadURL = await uploadImage(file, user.uid);
+                const downloadURL = await uploadToCloudinary(file);
 
                 // Update profiles
                 await Promise.all([
@@ -1512,7 +1676,7 @@
                 ]);
                 
                 // Update UI
-                document.getElementById('profile-pic').src = downloadURL;
+                document.getElementById('profilePicture').src = downloadURL || "https://ui-avatars.com/api/?name=" + encodeURIComponent(user.displayName || "User");
                 closeImageUploadModal();
                 alert('Profile picture updated successfully!');
 
@@ -1526,20 +1690,14 @@
         });
 
         // Simple upload function
-        async function uploadImage(file, userId) {
-            const storageRef = storage.ref();
-            const fileRef = storageRef.child(`profilePictures/${userId}/${Date.now()}_${file.name}`);
-            
-            try {
-                const snapshot = await fileRef.put(file);
-                console.log('Upload successful');
-                const downloadURL = await snapshot.ref.getDownloadURL();
-                console.log('File available at:', downloadURL);
-                return downloadURL;
-            } catch (error) {
-                console.error('Upload failed:', error);
-                throw error;
-                }
+        async function uploadToCloudinary(file) {
+            const url = 'https://api.cloudinary.com/v1_1/YOUR_CLOUD_NAME/image/upload';
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('upload_preset', 'YOUR_UPLOAD_PRESET');
+            const response = await fetch(url, { method: 'POST', body: formData });
+            const data = await response.json();
+            return data.secure_url; // This is the image URL
         }
 
         // Add this function to test upload directly
@@ -1554,7 +1712,7 @@
                 const testFile = new File([testBlob], 'test.txt', { type: 'text/plain' });
                 
                 console.log('Testing upload with dummy file...');
-                const downloadURL = await uploadImage(testFile, user.uid);
+                const downloadURL = await uploadToCloudinary(testFile);
                 console.log('Test upload successful:', downloadURL);
                 
                 // Clean up test file
@@ -1569,5 +1727,7 @@
             }
         };
     </script>
+    <!-- Cropper.js JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 </body>
 </html> 

@@ -81,6 +81,14 @@
       display: flex;
       align-items: center;
       margin-bottom: 12px;
+      justify-content: space-between;
+      position: relative;
+    }
+
+    .profile-left {
+      display: flex;
+      align-items: center;
+      flex: 1;
     }
 
     .profile img {
@@ -95,6 +103,7 @@
 
     .profile-info {
       flex: 1;
+      margin-right: 80px; /* Add space for the follow button */
     }
 
     .username {
@@ -102,6 +111,12 @@
       color: #2d3436;
       margin: 0;
       font-size: 1.1rem;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+
+    .username:hover {
+      color: #ff4757;
     }
 
     .timestamp {
@@ -210,23 +225,173 @@
     }
 
     .share-options {
-      position: absolute;
+      position: fixed;
       background: white;
-      padding: 10px;
-      border-radius: 8px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      border-radius: 20px 20px 0 0;
+      box-shadow: 0 -4px 15px rgba(0,0,0,0.2);
       display: none;
-      z-index: 1;
+      z-index: 1000;
+      width: 100%;
+      max-width: 500px;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 20px;
+      max-height: 80vh;
+      overflow-y: auto;
     }
 
     .share-options.show {
       display: block;
+      animation: slideUp 0.3s ease;
+    }
+
+    .share-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #f1f2f6;
+      margin-bottom: 15px;
+    }
+
+    .share-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #2d3436;
+    }
+
+    .close-share {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: #636e72;
+      cursor: pointer;
+      padding: 5px;
+    }
+
+    .share-section {
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-size: 0.9rem;
+      color: #636e72;
+      margin-bottom: 10px;
+      padding-left: 10px;
+    }
+
+    .share-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+    }
+
+    .share-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      padding: 10px;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .share-item:hover {
+      background: #f1f2f6;
+    }
+
+    .share-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 8px;
+      background: #f1f2f6;
+    }
+
+    .share-icon img {
+      width: 30px;
+      height: 30px;
+    }
+
+    .share-label {
+      font-size: 0.8rem;
+      color: #2d3436;
+      text-align: center;
+    }
+
+    .copy-section {
+      background: #f1f2f6;
+      border-radius: 10px;
+      padding: 15px;
+      margin-top: 20px;
+    }
+
+    .copy-input {
+      display: flex;
+      align-items: center;
+      background: white;
+      border-radius: 8px;
+      padding: 8px 12px;
+      margin-bottom: 10px;
+    }
+
+    .copy-input input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      font-size: 0.9rem;
+      color: #2d3436;
+    }
+
+    .copy-button {
+      background: #ff4757;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+    }
+
+    .copy-button:hover {
+      background: #ff6b81;
+    }
+
+    .share-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      z-index: 999;
+    }
+
+    .share-overlay.show {
+      display: block;
       animation: fadeIn 0.3s ease;
     }
 
+    @keyframes slideUp {
+      from { transform: translate(-50%, 100%); opacity: 0; }
+      to { transform: translate(-50%, 0); opacity: 1; }
+    }
+
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-10px); }
-      to { opacity: 1; transform: translateY(0); }
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @media (max-width: 600px) {
+      .share-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
     }
 
     @media (max-width: 768px) {
@@ -252,31 +417,37 @@
     /* Bottom Navigation */
     .bottom-nav {
       width: 100%;
-      background: rgba(0, 0, 0, 0.8);
+      background: rgba(10, 10, 10, 0.98);
       display: flex;
-      justify-content: space-around;
+      justify-content: space-between;
       align-items: center;
       position: fixed;
       bottom: 0;
       left: 0;
-      padding: 15px 0;
-      box-shadow: 0px -4px 8px rgba(0, 0, 0, 0.5);
+      padding: 0;
+      box-shadow: none;
+      border: none;
+      z-index: 100;
     }
 
     .bottom-nav a {
-      color: white;
+      color: #fff;
       text-decoration: none;
-      font-weight: bold;
-      padding: 10px 15px;
-      transition: background 0.3s, transform 0.2s;
-      border-radius: 5px;
-      font-size: 14px;
+      font-weight: 700;
+      padding: 18px 0;
+      flex: 1 1 0;
+      text-align: center;
+      font-size: 16px;
+      background: none;
+      border: none;
+      box-shadow: none;
+      transition: background 0.2s, color 0.2s;
     }
 
     .bottom-nav a:hover {
-      background: #ffcc00;
-      color: #141e30;
-      transform: scale(1.1);
+      background: rgba(255,255,255,0.04);
+      color: #fff;
+      transform: none;
     }
 
     /* Search and Filter Styles */
@@ -479,6 +650,144 @@
         gap: 20px;
       }
     }
+
+    .follow-btn {
+      padding: 6px 15px;
+      background: linear-gradient(45deg, #ff4757, #ff6b81);
+      color: white;
+      border: none;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .follow-btn:hover {
+      transform: translateY(-52%);
+      box-shadow: 0 4px 15px rgba(255, 71, 87, 0.3);
+    }
+
+    .follow-btn.following {
+      background: #2ecc71;
+    }
+
+    /* Comment Section Styles */
+    .comments-section {
+      display: none;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #f1f2f6;
+    }
+
+    .comments-section.show {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .comments-list {
+      max-height: 300px;
+      overflow-y: auto;
+      margin-bottom: 20px;
+    }
+
+    .comment {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+      padding: 10px;
+      background: #f8f9fa;
+      border-radius: 10px;
+    }
+
+    .comment-avatar {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .comment-content {
+      flex: 1;
+    }
+
+    .comment-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 5px;
+    }
+
+    .comment-username {
+      font-weight: 600;
+      color: #2d3436;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    .comment-timestamp {
+      font-size: 0.8rem;
+      color: #636e72;
+    }
+
+    .comment-text {
+      color: #2d3436;
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+
+    .comment-input {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .comment-input input {
+      flex: 1;
+      padding: 10px 15px;
+      border: 1px solid #f1f2f6;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+    }
+
+    .comment-input input:focus {
+      outline: none;
+      border-color: #ff4757;
+      box-shadow: 0 0 5px rgba(255, 71, 87, 0.2);
+    }
+
+    .comment-submit {
+      padding: 10px 20px;
+      background: linear-gradient(45deg, #ff4757, #ff6b81);
+      color: white;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .comment-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(255, 71, 87, 0.3);
+    }
+
+    .comment-submit:disabled {
+      background: #b2bec3;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .no-comments {
+      text-align: center;
+      color: #636e72;
+      font-size: 0.9rem;
+      padding: 20px;
+    }
   </style>
 </head>
 <body>
@@ -551,9 +860,34 @@
     const db = firebase.firestore();
     const auth = firebase.auth();
     let allStories = [];
+    let currentUser = null;
+    let followingList = [];
 
     // Load stories when the page loads
-    window.addEventListener('load', loadStories);
+    window.addEventListener('load', async () => {
+      await loadStories();
+      // Check if user is logged in
+      auth.onAuthStateChanged(async (user) => {
+        currentUser = user;
+        if (user) {
+          // Load following list
+          const userDoc = await db.collection('users').doc(user.uid).get();
+          followingList = userDoc.data()?.following || [];
+          // Update follow buttons based on following list
+          updateAllFollowButtons();
+        }
+      });
+    });
+
+    function updateAllFollowButtons() {
+      followingList.forEach(userId => {
+        const followBtn = document.getElementById(`follow-btn-${userId}`);
+        if (followBtn) {
+          followBtn.textContent = 'Following';
+          followBtn.classList.add('following');
+        }
+      });
+    }
 
     async function loadStories() {
       try {
@@ -603,14 +937,25 @@
       }
 
       container.innerHTML = stories.map(story => {
+        const isCurrentUser = currentUser && story.userId === currentUser.uid;
+        const isFollowing = followingList.includes(story.userId);
         return `
           <div class="card">
             <div class="profile">
-              <img src="${story.userData?.profilePic || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(story.userData?.username || 'User')}" alt="Profile">
-              <div class="profile-info">
-                <h3 class="username">${story.userData?.username || 'Anonymous'}</h3>
-                <p class="timestamp">${new Date(story.createdAt?.toDate()).toLocaleDateString()}</p>
+              <div class="profile-left">
+                <img src="${story.userData?.profilePic || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(story.userData?.username || 'User')}" alt="Profile">
+                <div class="profile-info">
+                  <h3 class="username" onclick="viewProfile('${story.userId}')">${story.userData?.username || 'Anonymous'}</h3>
+                  <p class="timestamp">${new Date(story.createdAt?.toDate()).toLocaleDateString()}</p>
+                </div>
               </div>
+              ${!isCurrentUser ? `
+                <button class="follow-btn ${isFollowing ? 'following' : ''}" 
+                        onclick="toggleFollow('${story.userId}')" 
+                        id="follow-btn-${story.userId}">
+                  ${isFollowing ? 'Following' : 'Follow'}
+                </button>
+              ` : ''}
             </div>
             <h2 class="title">${story.title}</h2>
             <div class="content" id="content-${story.id}">
@@ -626,9 +971,95 @@
               <span onclick="toggleShare('${story.id}')">📤 Share</span>
               <span onclick="saveStory('${story.id}')">🔖 Save</span>
             </div>
+            <div class="comments-section" id="comments-${story.id}">
+              <div class="comments-list" id="comments-list-${story.id}">
+                <!-- Comments will be loaded here -->
+              </div>
+              ${currentUser ? `
+                <div class="comment-input">
+                  <input type="text" id="comment-input-${story.id}" placeholder="Write a comment...">
+                  <button class="comment-submit" onclick="submitComment('${story.id}')" id="comment-submit-${story.id}">Post</button>
+                </div>
+              ` : `
+                <p style="text-align: center; color: #636e72; font-size: 0.9rem;">Please log in to comment</p>
+              `}
+            </div>
+            <div class="share-options" id="share-options-${story.id}">
+              <div class="share-header">
+                <h3 class="share-title">Share Story</h3>
+                <button class="close-share" onclick="closeShare('${story.id}')">×</button>
+              </div>
+              
+              <div class="share-section">
+                <h4 class="section-title">Social Media</h4>
+                <div class="share-grid">
+                  <div class="share-item" onclick="shareOnFacebook('${story.id}')">
+                    <div class="share-icon" style="background: #1877f2;">
+                      <img src="https://cdn-icons-png.flaticon.com/512/124/124010.png" alt="Facebook">
+                    </div>
+                    <span class="share-label">Facebook</span>
+                  </div>
+                  <div class="share-item" onclick="shareOnTwitter('${story.id}')">
+                    <div class="share-icon" style="background: #1da1f2;">
+                      <img src="https://cdn-icons-png.flaticon.com/512/124/124021.png" alt="Twitter">
+                    </div>
+                    <span class="share-label">Twitter</span>
+                  </div>
+                  <div class="share-item" onclick="shareOnInstagram('${story.id}')">
+                    <div class="share-icon" style="background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);">
+                      <img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" alt="Instagram">
+                    </div>
+                    <span class="share-label">Instagram</span>
+                  </div>
+                  <div class="share-item" onclick="shareOnLinkedIn('${story.id}')">
+                    <div class="share-icon" style="background: #0077b5;">
+                      <img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" alt="LinkedIn">
+                    </div>
+                    <span class="share-label">LinkedIn</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="share-section">
+                <h4 class="section-title">Messaging Apps</h4>
+                <div class="share-grid">
+                  <div class="share-item" onclick="shareOnWhatsApp('${story.id}')">
+                    <div class="share-icon" style="background: #25d366;">
+                      <img src="https://cdn-icons-png.flaticon.com/512/124/124034.png" alt="WhatsApp">
+                    </div>
+                    <span class="share-label">WhatsApp</span>
+                  </div>
+                  <div class="share-item" onclick="shareOnTelegram('${story.id}')">
+                    <div class="share-icon" style="background: #0088cc;">
+                      <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="Telegram">
+                    </div>
+                    <span class="share-label">Telegram</span>
+                  </div>
+                  <div class="share-item" onclick="shareOnEmail('${story.id}')">
+                    <div class="share-icon" style="background: #ea4335;">
+                      <img src="https://cdn-icons-png.flaticon.com/512/281/281769.png" alt="Email">
+                    </div>
+                    <span class="share-label">Email</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="copy-section">
+                <div class="copy-input">
+                  <input type="text" id="story-link-${story.id}" readonly>
+                  <button class="copy-button" onclick="copyStoryLink('${story.id}')">Copy</button>
+                </div>
+              </div>
+            </div>
+            <div class="share-overlay" id="share-overlay-${story.id}"></div>
           </div>
         `;
       }).join('');
+
+      // Update follow button states for all stories
+      if (currentUser) {
+        updateAllFollowButtons();
+      }
     }
 
     function searchStories() {
@@ -689,11 +1120,246 @@
     }
 
     function toggleComments(storyId) {
-      alert('Comments feature coming soon!');
+      const commentsSection = document.getElementById(`comments-${storyId}`);
+      const commentsList = document.getElementById(`comments-list-${storyId}`);
+      
+      // Toggle comments section visibility
+      commentsSection.classList.toggle('show');
+      
+      // If comments section is being shown, load comments
+      if (commentsSection.classList.contains('show')) {
+        loadComments(storyId);
+      }
     }
 
+    async function loadComments(storyId) {
+      const commentsList = document.getElementById(`comments-list-${storyId}`);
+      commentsList.innerHTML = '<div class="no-comments">Loading comments...</div>';
+
+      try {
+        console.log('Loading comments for story:', storyId);
+        console.log('Current user:', currentUser);
+
+        const commentsSnapshot = await db.collection('stories')
+          .doc(storyId)
+          .collection('comments')
+          .orderBy('createdAt', 'desc')
+          .get();
+
+        if (commentsSnapshot.empty) {
+          commentsList.innerHTML = '<div class="no-comments">No comments yet. Be the first to comment!</div>';
+          return;
+        }
+
+        const comments = await Promise.all(commentsSnapshot.docs.map(async doc => {
+          const comment = doc.data();
+          try {
+            const userDoc = await db.collection('users').doc(comment.userId).get();
+            const userData = userDoc.data() || {};
+            return {
+              id: doc.id,
+              ...comment,
+              userData
+            };
+          } catch (userError) {
+            console.error('Error fetching user data:', userError);
+            return {
+              id: doc.id,
+              ...comment,
+              userData: { username: 'Anonymous' }
+            };
+          }
+        }));
+
+        commentsList.innerHTML = comments.map(comment => `
+          <div class="comment">
+            <img src="${comment.userData?.profilePic || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(comment.userData?.username || 'User')}" 
+                 alt="Profile" 
+                 class="comment-avatar"
+                 onclick="viewProfile('${comment.userId}')">
+            <div class="comment-content">
+              <div class="comment-header">
+                <span class="comment-username" onclick="viewProfile('${comment.userId}')">
+                  ${comment.userData?.username || 'Anonymous'}
+                </span>
+                <span class="comment-timestamp">
+                  ${new Date(comment.createdAt?.toDate()).toLocaleDateString()}
+                </span>
+              </div>
+              <p class="comment-text">${comment.text}</p>
+            </div>
+          </div>
+        `).join('');
+      } catch (error) {
+        console.error('Error loading comments:', error);
+        commentsList.innerHTML = `
+          <div class="no-comments">
+            Error loading comments. Please try again later.
+            ${currentUser ? '' : '<br>You need to be logged in to view comments.'}
+          </div>
+        `;
+      }
+    }
+
+    async function submitComment(storyId) {
+      if (!currentUser) {
+        alert('Please log in to comment');
+        return;
+      }
+
+      const commentInput = document.getElementById(`comment-input-${storyId}`);
+      const commentSubmit = document.getElementById(`comment-submit-${storyId}`);
+      const commentText = commentInput.value.trim();
+
+      if (!commentText) {
+        return;
+      }
+
+      commentInput.disabled = true;
+      commentSubmit.disabled = true;
+      commentSubmit.textContent = 'Posting...';
+
+      try {
+        console.log('Submitting comment for story:', storyId);
+        const commentRef = await db.collection('stories')
+          .doc(storyId)
+          .collection('comments')
+          .add({
+            text: commentText,
+            userId: currentUser.uid,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+          });
+
+        commentInput.value = '';
+        commentInput.disabled = false;
+        commentSubmit.disabled = false;
+        commentSubmit.textContent = 'Post';
+
+        loadComments(storyId);
+      } catch (error) {
+        console.error('Error submitting comment:', error);
+        alert('Error submitting comment. Please try again later.');
+        commentInput.disabled = false;
+        commentSubmit.disabled = false;
+        commentSubmit.textContent = 'Post';
+      }
+    }
+
+    // Add event listener for Enter key in comment input
+    document.addEventListener('keypress', function(event) {
+      if (event.key === 'Enter') {
+        const activeElement = document.activeElement;
+        if (activeElement && activeElement.id.startsWith('comment-input-')) {
+          const storyId = activeElement.id.split('-')[2];
+          submitComment(storyId);
+        }
+      }
+    });
+
     function toggleShare(storyId) {
-      alert('Share feature coming soon!');
+      const shareOptions = document.getElementById(`share-options-${storyId}`);
+      const shareOverlay = document.getElementById(`share-overlay-${storyId}`);
+      const storyLink = document.getElementById(`story-link-${storyId}`);
+      
+      // Generate story URL
+      const storyUrl = `${window.location.origin}/story.html?id=${storyId}`;
+      storyLink.value = storyUrl;
+      
+      // Show share options and overlay
+      shareOptions.classList.add('show');
+      shareOverlay.classList.add('show');
+      
+      // Close other share options
+      document.querySelectorAll('.share-options').forEach(options => {
+        if (options.id !== `share-options-${storyId}`) {
+          options.classList.remove('show');
+        }
+      });
+      document.querySelectorAll('.share-overlay').forEach(overlay => {
+        if (overlay.id !== `share-overlay-${storyId}`) {
+          overlay.classList.remove('show');
+        }
+      });
+    }
+
+    function closeShare(storyId) {
+      const shareOptions = document.getElementById(`share-options-${storyId}`);
+      const shareOverlay = document.getElementById(`share-overlay-${storyId}`);
+      shareOptions.classList.remove('show');
+      shareOverlay.classList.remove('show');
+    }
+
+    // Close share options when clicking overlay
+    document.querySelectorAll('.share-overlay').forEach(overlay => {
+      overlay.addEventListener('click', function() {
+        const storyId = this.id.split('-')[2];
+        closeShare(storyId);
+      });
+    });
+
+    function shareOnFacebook(storyId) {
+      const story = allStories.find(s => s.id === storyId);
+      const url = encodeURIComponent(`${window.location.origin}/story.html?id=${storyId}`);
+      const title = encodeURIComponent(story.title);
+      window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${title}`, '_blank');
+    }
+
+    function shareOnTwitter(storyId) {
+      const story = allStories.find(s => s.id === storyId);
+      const url = encodeURIComponent(`${window.location.origin}/story.html?id=${storyId}`);
+      const text = encodeURIComponent(`Check out this story: ${story.title}`);
+      window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank');
+    }
+
+    function shareOnWhatsApp(storyId) {
+      const story = allStories.find(s => s.id === storyId);
+      const url = encodeURIComponent(`${window.location.origin}/story.html?id=${storyId}`);
+      const text = encodeURIComponent(`Check out this story: ${story.title}`);
+      window.open(`https://wa.me/?text=${text}%20${url}`, '_blank');
+    }
+
+    function shareOnInstagram(storyId) {
+      const story = allStories.find(s => s.id === storyId);
+      const url = encodeURIComponent(`${window.location.origin}/story.html?id=${storyId}`);
+      const text = encodeURIComponent(`Check out this story: ${story.title}`);
+      window.open(`https://www.instagram.com/?url=${url}&title=${text}`, '_blank');
+    }
+
+    function shareOnLinkedIn(storyId) {
+      const story = allStories.find(s => s.id === storyId);
+      const url = encodeURIComponent(`${window.location.origin}/story.html?id=${storyId}`);
+      const title = encodeURIComponent(story.title);
+      const summary = encodeURIComponent(story.story.substring(0, 200));
+      window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}&title=${title}&summary=${summary}`, '_blank');
+    }
+
+    function shareOnTelegram(storyId) {
+      const story = allStories.find(s => s.id === storyId);
+      const url = encodeURIComponent(`${window.location.origin}/story.html?id=${storyId}`);
+      const text = encodeURIComponent(`Check out this story: ${story.title}`);
+      window.open(`https://t.me/share/url?url=${url}&text=${text}`, '_blank');
+    }
+
+    function shareOnEmail(storyId) {
+      const story = allStories.find(s => s.id === storyId);
+      const url = `${window.location.origin}/story.html?id=${storyId}`;
+      const subject = encodeURIComponent(`Check out this story: ${story.title}`);
+      const body = encodeURIComponent(`I found this interesting story and wanted to share it with you:\n\n${story.title}\n\n${url}`);
+      window.location.href = `mailto:?subject=${subject}&body=${body}`;
+    }
+
+    function copyStoryLink(storyId) {
+      const storyLink = document.getElementById(`story-link-${storyId}`);
+      storyLink.select();
+      document.execCommand('copy');
+      
+      // Show copied feedback
+      const copyButton = storyLink.nextElementSibling;
+      const originalText = copyButton.textContent;
+      copyButton.textContent = 'Copied!';
+      setTimeout(() => {
+        copyButton.textContent = originalText;
+      }, 2000);
     }
 
     function saveStory(storyId) {
@@ -719,6 +1385,53 @@
         closePopup();
       }
     });
+
+    async function toggleFollow(userId) {
+      if (!currentUser) {
+        alert('Please log in to follow users');
+        return;
+      }
+
+      if (userId === currentUser.uid) {
+        alert('You cannot follow yourself');
+        return;
+      }
+
+      const followBtn = document.getElementById(`follow-btn-${userId}`);
+      const userRef = db.collection('users').doc(currentUser.uid);
+
+      if (followingList.includes(userId)) {
+        // Unfollow
+        followingList = followingList.filter(id => id !== userId);
+        await userRef.update({
+          following: followingList
+        });
+        followBtn.textContent = 'Follow';
+        followBtn.classList.remove('following');
+      } else {
+        // Follow
+        followingList.push(userId);
+        await userRef.update({
+          following: followingList
+        });
+        followBtn.textContent = 'Following';
+        followBtn.classList.add('following');
+      }
+
+      // Update the followers count on the profile page if it exists
+      const followersCount = document.getElementById('followers-count');
+      if (followersCount) {
+        const currentCount = parseInt(followersCount.textContent);
+        followersCount.textContent = followingList.includes(userId) ? 
+          currentCount + 1 : 
+          currentCount - 1;
+      }
+    }
+
+    // Add this function to handle profile viewing
+    function viewProfile(userId) {
+      window.location.href = `profile.html?id=${userId}`;
+    }
   </script>
 </body>
 </html>

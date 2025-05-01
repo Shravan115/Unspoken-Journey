@@ -15,8 +15,8 @@
             font-size: 18px;
             margin: 0;
             padding: 0;
-            background: url('https://img.freepik.com/premium-photo/what-is-your-story-text-notebook-with-green-leaf-dark-background_585380-199.jpg') no-repeat center center/cover;
-            color: #fff;
+            background: url('https://eu-central.storage.cloudconvert.com/tasks/dcfa4ce3-7e20-43dd-b27b-0b21fd0ff8f5/ChatGPT%20Image%20May%201%2C%202025%2C%2007_50_20%20PM.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=cloudconvert-production%2F20250501%2Ffra%2Fs3%2Faws4_request&X-Amz-Date=20250501T142302Z&X-Amz-Expires=86400&X-Amz-Signature=20252df62a5ef1cd6f33b69989e2faf9be2f4071aaaffbbaf8b825626cefc933&X-Amz-SignedHeaders=host&response-content-disposition=inline%3B%20filename%3D%22ChatGPT%20Image%20May%201%2C%202025%2C%2007_50_20%20PM.png%22&response-content-type=image%2Fpng&x-id=GetObject') no-repeat center center/cover;
+            color: #e8e8e8;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
@@ -29,10 +29,34 @@
             flex-grow: 1;
             padding: 100px 20px;
             text-align: center;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.4);
             display: flex;
             flex-direction: column;
             justify-content: center;
+        }
+
+        .content h1 {
+            color: #f0f0f0;
+            font-size: 2.5em;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .custom-playlists h2 {
+            color: #f5f5f5;
+            font-size: 1.8em;
+            font-weight: 500;
+            margin-bottom: 15px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .custom-playlists p {
+            color: #e0e0e0;
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
         }
 
         .custom-playlists {
@@ -92,39 +116,176 @@
         /* Bottom Navigation */
         .bottom-nav {
             width: 100%;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(10, 10, 10, 0.98);
             display: flex;
-            justify-content: space-around;
+            justify-content: space-between;
             align-items: center;
             position: fixed;
             bottom: 0;
             left: 0;
-            padding: 15px 0;
-            box-shadow: 0px -4px 8px rgba(0, 0, 0, 0.5);
+            padding: 0;
+            box-shadow: none;
+            border: none;
+            z-index: 100;
         }
 
         .bottom-nav a {
-            color: white;
+            color: #fff;
             text-decoration: none;
-            font-weight: bold;
-            padding: 10px 15px;
-            transition: background 0.3s, transform 0.2s;
-            border-radius: 5px;
-            font-size: 14px;
+            font-weight: 700;
+            padding: 18px 0;
+            flex: 1 1 0;
+            text-align: center;
+            font-size: 16px;
+            background: none;
+            border: none;
+            box-shadow: none;
+            transition: background 0.2s, color 0.2s;
         }
 
         .bottom-nav a:hover {
-            background: #ffcc00;
-            color: #141e30;
-            transform: scale(1.1);
+            background: rgba(255,255,255,0.04);
+            color: #fff;
+            transform: none;
+        }
+
+        /* Logo Styles */
+        .logo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            margin-top: 40px;
+        }
+
+        .logo-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FF6B6B 0%, #4ECDC4 100%);
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            animation: float 4s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(2deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+
+        .logo-circle::before {
+            content: '';
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: white;
+            opacity: 0.1;
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.1; }
+            50% { transform: scale(1.1); opacity: 0.2; }
+            100% { transform: scale(1); opacity: 0.1; }
+        }
+
+        .logo-symbol {
+            font-size: 50px;
+            color: white;
+            text-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transform: rotate(-15deg);
+            animation: penFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes penFloat {
+            0% { transform: rotate(-15deg) translateY(0px); }
+            50% { transform: rotate(-10deg) translateY(-5px); }
+            100% { transform: rotate(-15deg) translateY(0px); }
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #FF6B6B 0%, #4ECDC4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo-subtext {
+            font-size: 14px;
+            color: #fff;
+            letter-spacing: 2px;
+            font-weight: 600;
+            text-align: center;
+            max-width: 250px;
+            line-height: 1.4;
+        }
+
+        /* Top left quote styling */
+        .top-left-quote {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: #f5e6b2;
+            font-size: 13px;
+            font-style: italic;
+            font-weight: 500;
+            text-align: left;
+            line-height: 1.3;
+            padding: 8px 12px;
+            background: rgba(90, 60, 20, 0.55);
+            border-radius: 9px;
+            border: 2px solid #f5e6b2;
+            box-shadow: none;
+            backdrop-filter: none;
+            max-width: 170px;
+            text-shadow: none;
+        }
+
+        .top-left-quote br {
+            display: block;
+            margin: 3px 0;
+        }
+
+        /* Click animation effects */
+        .logo-circle.click-effect {
+            animation: blink 0.3s ease-in-out;
+        }
+
+        @keyframes blink {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .logo-circle.click-effect::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, transparent 70%);
+            animation: ripple 0.6s ease-out;
+        }
+
+        @keyframes ripple {
+            0% { transform: scale(0.8); opacity: 0.5; }
+            100% { transform: scale(1.5); opacity: 0; }
         }
     </style>
 </head>
 <body>
 
-<div class="dark-mode-container">
-    <button class="theme-toggle">🌙</button>
-</div>
+<div class="top-left-quote">Every story matters,<br>Write your journey.</div>
 
 <div class="top-controls">
     <a href="login.html" class="auth-button">Login</a>
@@ -134,12 +295,19 @@
 <div class="content">
     <header class="parallax fade-in">
         <h1>Welcome to Unspoken Journeys</h1>
+        <div class="logo-container">
+            <div class="logo-circle">
+                <div class="logo-symbol">✒️</div>
+            </div>
+            <div class="logo-text">Unspoken Journey</div>
+            <div class="logo-subtext">Where Every Step Tells a Story</div>
+        </div>
     </header>
 
     <section class="custom-playlists fade-in" style="animation-delay: 0.5s;">
-        <h2>Unleash the Power of Storytelling</h2>
-        <p>Step into a world where every journey has a voice, waiting to be heard. Explore, share, and connect with a community that thrives on authenticity and inspiration.</p>
-        <p>Dive deep into emotions, discover new perspectives, and be part of a platform that celebrates every unspoken story. Your voice matters, your story is unique, and this is the place to let it shine.</p>
+        <h2>Share Your Story, Find Your Voice</h2>
+        <p>Every person has a unique story to tell. Here, you can share your experiences, connect with others, and discover inspiring journeys from around the world.</p>
+        <p>Whether it's a moment of joy, a lesson learned, or a dream you're chasing, your story deserves to be heard. Join our community of storytellers and let your voice be part of something special.</p>
     </section>
 </div>
 
@@ -153,16 +321,13 @@
 </div>
 
 <script>
-    document.querySelector('.theme-toggle').addEventListener('click', () => {
-        document.body.classList.toggle('dark-mode');
-        localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+    // Add click effect to logo
+    document.querySelector('.logo-circle').addEventListener('click', function() {
+        this.classList.add('click-effect');
+        setTimeout(() => {
+            this.classList.remove('click-effect');
+        }, 600);
     });
-
-    window.onload = () => {
-        if (localStorage.getItem('theme') === 'dark') {
-            document.body.classList.add('dark-mode');
-        }
-    };
 </script>
 
 </body>
